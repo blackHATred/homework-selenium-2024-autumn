@@ -48,15 +48,6 @@ def get_driver(browser_name):
     return browser
 
 
-@pytest.fixture(scope='session', params=['chrome', 'firefox'])
-def all_drivers(config, request):
-    url = config['url']
-    browser = get_driver(request.param)
-    browser.get(url)
-    yield browser
-    browser.quit()
-
-
 @pytest.fixture
 def base_page(driver):
     return BasePage(driver=driver)

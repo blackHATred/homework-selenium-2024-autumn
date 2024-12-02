@@ -12,15 +12,12 @@ class PageNotOpenedException(Exception):
 
 
 class BasePage(object):
-
-    locators = None
-    locators_main = None
     url = Config.VK_ADS_URL
 
-    def is_opened(self, timeout=60):
+    def is_opened(self, timeout=30):
         started = time.time()
         while time.time() - started < timeout:
-            if self.driver.current_url == self.url:
+            if self.driver.current_url.rstrip("/") == self.url.rstrip("/"):
                 return True
         raise PageNotOpenedException(f'{self.url} did not open in {timeout} sec, current url {self.driver.current_url}')
 
@@ -33,6 +30,10 @@ class BasePage(object):
         if timeout is None:
             timeout = 15
         return WebDriverWait(self.driver, timeout=timeout)
+
+    def open(self):
+        self.driver.get(self.url)
+        self.is_opened()
 
     def find(self, locator, timeout=None):
         return self.wait(timeout).until(EC.presence_of_element_located(locator))
