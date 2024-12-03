@@ -21,7 +21,7 @@ class BaseCase:
         self.driver.switch_to.window(current)
 
     @pytest.fixture(scope='function', autouse=True)
-    def setup(self, driver, config, request: FixtureRequest):
+    def setup_(self, driver, config, request: FixtureRequest):
         self.driver = driver
         self.config = config
         request.addfinalizer(self.teardown)
