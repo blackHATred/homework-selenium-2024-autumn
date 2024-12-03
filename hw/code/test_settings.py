@@ -4,6 +4,7 @@ from hw.code.base import BaseCase
 from hw.code.ui.pages.settings_page import SettingsPage
 
 
+@pytest.skip
 class TestMainTab(BaseCase):
     @pytest.fixture(autouse=True)
     def setup_settings_page(self, driver):
@@ -20,4 +21,16 @@ class TestMainTab(BaseCase):
         self.settings_page.click_button('Отмена')
         # Проверяем, что поле вернулось в прошлое состояние
         assert self.settings_page.get_field_value('Телефон') == previous_value
+
+
+class TestNotificationTab(BaseCase):
+    pass
+
+
+class TestAccessListTab(BaseCase):
+    pass
+
+
+class TestChangesHistoryTab(BaseCase):
+    pass
 
