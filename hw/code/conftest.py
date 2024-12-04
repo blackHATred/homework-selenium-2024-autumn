@@ -6,8 +6,10 @@ class Config:
     VK_ID_URL = 'https://id.vk.com'
     VK_ADS_URL = 'https://ads.vk.com'
     VK_ADS_CABINET_URL = f'{VK_ADS_URL}/hq'
+    MAIL_RU = 'https://mail.ru'
     VK_ADS_OVERVIEW_URL = f'{VK_ADS_CABINET_URL}/overview'
     VK_ADS_REGISTER_URL = f'{VK_ADS_CABINET_URL}/registration'
+    VK_ADS_REGISTER_NEW_URL = f'{VK_ADS_REGISTER_URL}/new'
     VK_ADS_SETTINGS_URL = f'{VK_ADS_CABINET_URL}/settings'
 
 
@@ -46,10 +48,19 @@ def config(request):
     }
 
 
-@pytest.fixture
+@pytest.fixture(scope='session')
 def driver():
     options = webdriver.ChromeOptions()
+    # можно включить для оптимизации, но тогда не будет грузить капчу
+    # options.add_argument('--blink-settings=imagesEnabled=false')
     driver = webdriver.Chrome(options=options)
+    # Замедляем скорость интернета, чтобы не ловить ошибки из-за ограничений на кол-во запросов
+    driver.set_network_conditions(
+        offline=False,
+        latency=5,
+        download_throughput=500 * 1024,
+        upload_throughput=500 * 1024,
+    )
     driver.maximize_window()
     yield driver
     driver.quit()

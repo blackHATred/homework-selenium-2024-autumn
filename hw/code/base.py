@@ -1,7 +1,6 @@
 from contextlib import contextmanager
 
 import pytest
-from _pytest.fixtures import FixtureRequest
 from selenium.webdriver.remote.webdriver import WebDriver
 
 
@@ -21,10 +20,9 @@ class BaseCase:
         self.driver.switch_to.window(current)
 
     @pytest.fixture(scope='function', autouse=True)
-    def setup_(self, driver, config, request: FixtureRequest):
+    def setup_(self, driver, config):
         self.driver = driver
         self.config = config
-        request.addfinalizer(self.teardown)
-
-    def teardown(self):
+        yield
         self.driver.delete_all_cookies()
+

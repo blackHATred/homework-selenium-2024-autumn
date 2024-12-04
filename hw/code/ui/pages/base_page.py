@@ -4,7 +4,6 @@ from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-from hw.code.conftest import Config
 from hw.code.ui.locators.index import IndexLocators
 
 
@@ -13,14 +12,14 @@ class PageNotOpenedException(Exception):
 
 
 class BasePage(object):
-    url = Config.VK_ADS_URL
+    url: str = ''
     locators = IndexLocators
     driver: WebDriver
 
     def is_opened(self, timeout: int = 30, url: str = None):
-        started = time.time()
         if url is None:
             url = self.url
+        started = time.time()
         while time.time() - started < timeout:
             if url in self.driver.current_url:
                 return True
@@ -33,19 +32,15 @@ class BasePage(object):
 
     def wait(self, timeout=None):
         if timeout is None:
-            timeout = 15
+            timeout = 30
         return WebDriverWait(self.driver, timeout=timeout)
 
     def open(self):
         self.driver.get(self.url)
 
     def open_and_wait(self):
-        current_url = self.driver.current_url
-        if self.url == current_url:
-            # Уже открыто
-            return
         self.open()
-        self.wait().until(EC.url_changes(current_url))
+        self.wait().until(EC.url_matches(self.url))
 
     def find(self, locator, timeout=None):
         return self.wait(timeout).until(EC.presence_of_element_located(locator))
@@ -62,9 +57,6 @@ class BasePage(object):
 
     def clear_field(self, field_locator: tuple[str, str]):
         self.find(field_locator).clear()
-
-    def click_button(self, button_locator: tuple[str, str]):
-        self.click(button_locator)
 
     def get_field_value(self, field_locator: str):
         return self.find(field_locator).get_attribute('value')
