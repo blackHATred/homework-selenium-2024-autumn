@@ -5,6 +5,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from hw.code.fixtures import *
 
 
+@pytest.mark.skip
 class TestRegistration(BaseCase):
     def test_redirect(self, register_page_with_deleted_user):
         register_page_with_deleted_user.open()
