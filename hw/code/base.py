@@ -24,5 +24,5 @@ class BaseCase:
         self.driver = driver
         self.config = config
         yield
-        self.driver.delete_all_cookies()
+        # self.driver.delete_all_cookies()
 

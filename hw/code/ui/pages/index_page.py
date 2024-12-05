@@ -11,12 +11,12 @@ class IndexPage(BasePage):
     logged_in = False
 
     def login(self, credentials):
+        if IndexPage.logged_in:
+            # Если уже авторизованы, то повторно входить не нужно
+            return
         # Входим в VK ADS через Mail ru oauth
         self.click(IndexLocators.GO_TO_CABINET_BUTTON)
         self.click(AuthLocators.MAIL_RU_OAUTH_OPTION_BUTTON)
-        if IndexPage.logged_in:
-            # Если в рамках сессии уже авторизовались в Mail ru, то не нужно вводить логин и пароль повторно
-            return
         self.fill_field(AuthLocators.EMAIL_INPUT, credentials['login'])
         self.click(AuthLocators.NEXT_BUTTON)
         self.click(AuthLocators.AUTH_PROBLEMS_BUTTON)
