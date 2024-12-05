@@ -10,17 +10,19 @@ from hw.code.ui.locators.settings import MainTabLocators, AsideMenuSettingsButto
 
 
 class TestMainTab(BaseCase):
+    @pytest.fixture(autouse=True)
+    def setup(self, settings_page):
+        settings_page.open_and_wait()
 
     def test_settings_aside_button(self, settings_page, driver):
         # Можно перейти в настройки из любого места в ЛК, где доступно боковое меню
-        driver.get(Config.VK_ADS_OVERVIEW_URL)
+        driver.get(Config.VK_ADS_OVERVIEW_URL)  # Уйдем со страницы настроек на обзорную
         WebDriverWait(driver, 10).until(EC.url_contains(Config.VK_ADS_OVERVIEW_URL))
         settings_page.click(AsideMenuSettingsButtonLocators.SETTINGS_BUTTON)
         assert settings_page.is_opened()
 
     def test_cancel_button(self, settings_page):
         # Вносим изменения в любые поля, чтобы появились кнопки "Сохранить" и "Отмена"
-        settings_page.open_and_wait()
         settings_page.type_valid_data_on_main_tab()  # Вносим валидные изменения
         settings_page.fill_field(MainTabLocators.FULL_NAME_INPUT, 'test')
         current_name = settings_page.get_field_value(MainTabLocators.FULL_NAME_INPUT)  # Запоминаем текущее значение
@@ -30,7 +32,6 @@ class TestMainTab(BaseCase):
     def test_save_button(self, settings_page):
         # Вносим изменения в любые поля, чтобы появились кнопки "Сохранить" и "Отмена"
         # Для сохранения данные должны быть валидными
-        settings_page.open_and_wait()
         settings_page.type_valid_data_on_main_tab()
         settings_page.save_settings()
         # Обновляем страницу и проверяем, что сохранения прошли успешно
@@ -38,7 +39,6 @@ class TestMainTab(BaseCase):
         assert settings_page.get_field_value(MainTabLocators.TEL_INPUT) == SettingsPage.valid_test_data['tel']
 
     def test_tel_validation(self, settings_page):
-        settings_page.open_and_wait()
         # Сначала заполним валидными данными
         settings_page.type_valid_data_on_main_tab()
         # Попробуем перезаписать валидный номер на невалидные варианты
@@ -62,7 +62,6 @@ class TestMainTab(BaseCase):
         assert settings_page.get_field_value(MainTabLocators.TEL_INPUT) == '+9999999999811'
 
     def test_email_validation(self, settings_page):
-        settings_page.open_and_wait()
         # Сначала заполним валидными данными
         settings_page.type_valid_data_on_main_tab()
         # Попробуем перезаписать валидный email на невалидные варианты
@@ -84,7 +83,6 @@ class TestMainTab(BaseCase):
 
     def test_email_limit(self, settings_page):
         # Можно добавить не более пяти email адресов
-        settings_page.open_and_wait()
         assert not settings_page.find(MainTabLocators.ADD_EMAIL_BUTTON).get_attribute('disabled')
         # Сначала заполним валидными данными
         settings_page.type_valid_data_on_main_tab()
@@ -95,7 +93,6 @@ class TestMainTab(BaseCase):
         assert settings_page.find(MainTabLocators.ADD_EMAIL_BUTTON).get_attribute('disabled')
 
     def test_delete_email(self, settings_page):
-        settings_page.open_and_wait()
         # Заполним валидными данными
         settings_page.type_valid_data_on_main_tab()
         # Есть email => можно удалить
@@ -106,7 +103,6 @@ class TestMainTab(BaseCase):
         assert not settings_page.exists(MainTabLocators.DELETE_EMAIL_BUTTON)
 
     def test_full_name(self, settings_page):
-        settings_page.open_and_wait()
         settings_page.type_valid_data_on_main_tab()
 
         # Введём невалидное ФИО
@@ -120,7 +116,6 @@ class TestMainTab(BaseCase):
         assert not settings_page.exists(MainTabLocators.FULL_NAME_ERROR)
 
     def test_tin(self, settings_page):
-        settings_page.open_and_wait()
         settings_page.type_valid_data_on_main_tab()
 
         # Введём невалидный ИНН из нецифирных символов
@@ -150,7 +145,6 @@ class TestMainTab(BaseCase):
                         settings_page.exists(MainTabLocators.TIN_INCORRECT_LEN_ERROR)))
 
     def test_interface_params(self, settings_page, driver):
-        settings_page.open_and_wait()
         settings_page.type_valid_data_on_main_tab()
 
         # Можно ввести не более 255 символов в название кабинета

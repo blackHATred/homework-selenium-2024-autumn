@@ -4,6 +4,8 @@ from hw.code.ui.pages.base_page import BasePage
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
+from hw.code.ui.pages.index_page import IndexPage
+
 
 class BaseSettingsPage(BasePage):
 
@@ -35,6 +37,7 @@ class SettingsPage(BaseSettingsPage):
         WebDriverWait(self.driver, 10).until(EC.presence_of_element_located(MainTabLocators.DELETE_ACCOUNT_CONFIRM_BUTTON))
         WebDriverWait(self.driver, 10).until(EC.visibility_of_element_located(MainTabLocators.DELETE_ACCOUNT_CONFIRM_BUTTON))
         self.click(MainTabLocators.DELETE_ACCOUNT_CONFIRM_BUTTON)
+        IndexPage.vkid_logged_in = False  # После удаления аккаунта пользователь разлогинивается из VK ID
 
     def type_valid_data_on_main_tab(self):
         self.clear_field(MainTabLocators.TEL_INPUT)

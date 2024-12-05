@@ -1,4 +1,6 @@
 import os
+import time
+
 import pytest
 from dotenv import load_dotenv
 from selenium.webdriver.support.wait import WebDriverWait
@@ -32,22 +34,33 @@ def auth_page(driver):
 def authorized_user(driver, auth_page, credentials):
     # Фикстура для авторизованного через VK ID пользователя (необязательно зарегистрированного)
     driver.get(IndexPage.url)
-    auth_page.login(credentials)
+    WebDriverWait(driver, 5).until(lambda d: d.current_url.rstrip('/') in (
+        Config.VK_ADS_OVERVIEW_URL,
+        Config.VK_ADS_REGISTER_URL,
+        Config.VK_ADS_URL,
+    ))
+    if Config.VK_ADS_OVERVIEW_URL in driver.current_url or Config.VK_ADS_REGISTER_URL in driver.current_url:
+        # Пользователь авторизован
+        return IndexPage(driver)
+    # Пользователь авторизован, но не зарегистрирован
+    IndexPage(driver).login(credentials)
     return IndexPage(driver)
 
 
 @pytest.fixture
 def registered_user(driver, authorized_user, credentials):
     # Фикстура для зарегистрированного пользователя
-    driver.get(RegisterPage.url)
-    reg = RegisterPage(driver)
-    reg.open()
+    driver.get(IndexPage.url)
     # Откроется либо страница регистрации, либо главная страница ЛК
-    WebDriverWait(driver, 5).until(lambda d: d.current_url.rstrip('/') in (Config.VK_ADS_OVERVIEW_URL, Config.VK_ADS_REGISTER_URL))
-    if driver.current_url.rstrip('/') == Config.VK_ADS_OVERVIEW_URL:
-        return reg
-    reg.register(credentials)
-    return reg
+    WebDriverWait(driver, 5).until(lambda d: d.current_url.rstrip('/') in (
+        Config.VK_ADS_OVERVIEW_URL,
+        Config.VK_ADS_REGISTER_URL,
+        Config.VK_ADS_URL,
+    ))
+    if Config.VK_ADS_OVERVIEW_URL in driver.current_url:
+        return RegisterPage(driver)
+    RegisterPage(driver).register(credentials)
+    return RegisterPage(driver)
 
 
 @pytest.fixture
@@ -69,20 +82,23 @@ def access_settings_page(driver, registered_user):
 
 
 @pytest.fixture
-def register_page(driver, settings_page, auth_page, credentials):
+def register_page(driver, authorized_user, credentials):
+    # Фикстура authorized_user гарантирует, что пользователь авторизован, но нужно проверить, зарегистрирован ли он
+
     driver.get(Config.VK_ADS_CABINET_URL)
     # Может открыться одна из страниц
-    WebDriverWait(driver, 5).until(
+    WebDriverWait(driver, 15).until(
         lambda d: any((
             Config.VK_ADS_OVERVIEW_URL in d.current_url,
-            Config.VK_ADS_DASHBOARD_URL in d.current_url,  # тот же OVERVIEW, но предлагает пройти обучение по ЛК
             Config.VK_ADS_REGISTER_URL in d.current_url,
         ))
     )
-    if driver.current_url.rstrip('/') == Config.VK_ADS_REGISTER_URL:
+    # Если открылась страница регистрации, то возвращаем ее
+    if Config.VK_ADS_REGISTER_URL in driver.current_url:
         return RegisterPage(driver)
     # Если пользователь не удален, то удаляем его
-    settings_page.delete_account()
+    SettingsPage(driver).delete_account()
     # Заново входим через mail ru
-    auth_page.login(credentials)
+    IndexPage(driver).login(credentials)
+    driver.get(RegisterPage.url)
     return RegisterPage(driver)
