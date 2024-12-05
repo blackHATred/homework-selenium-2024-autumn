@@ -23,6 +23,3 @@ class BaseCase:
     def setup_(self, driver, config):
         self.driver = driver
         self.config = config
-        yield
-        # self.driver.delete_all_cookies()
-

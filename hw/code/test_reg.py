@@ -17,9 +17,10 @@ class TestRegistration(BaseCase):
 
     def test_switch_language(self, register_page):
         register_page.select_ru_lang()
-        assert 'Добро пожаловать в VK Рекламу' == ' '.join(register_page.find(RegisterLocators.TITLE).text.split())
+        # Надпись может содержать пробелы и переносы строк, поэтому приводим к нужному виду через join
+        assert register_page.labels['ru_welcome'] == ' '.join(register_page.find(RegisterLocators.TITLE).text.split())
         register_page.select_en_lang()
-        assert 'Welcome to VK Ads' == ' '.join(register_page.find(RegisterLocators.TITLE).text.split())
+        assert register_page.labels['en_welcome'] == ' '.join(register_page.find(RegisterLocators.TITLE).text.split())
         register_page.select_ru_lang()  # Возвращаем язык на русский
 
     def test_new_cabinet_option(self, register_page):
@@ -28,7 +29,7 @@ class TestRegistration(BaseCase):
 
     def test_checkboxes(self, register_page, driver):
         register_page.click_new_cabinet_button()
-        WebDriverWait(driver, 2).until(EC.url_contains(Config.VK_ADS_REGISTER_NEW_URL))
+        register_page.wait(2).until(EC.url_contains(Config.VK_ADS_REGISTER_NEW_URL))
 
         # Если выбран чекбокс "агентство", то появляется только один чекбокс "юр. лицо".
         register_page.click_agency_option()
@@ -46,7 +47,7 @@ class TestRegistration(BaseCase):
 
     def test_registration(self, register_page, credentials, driver):
         register_page.click_new_cabinet_button()
-        WebDriverWait(driver, 2).until(EC.url_contains(Config.VK_ADS_REGISTER_NEW_URL))
+        register_page.wait(2).until(EC.url_contains(Config.VK_ADS_REGISTER_NEW_URL))
 
         # Если не выставлен обязательный чекбокс, то регистрация не пройдет
         register_page.enter_with_invalid_checkbox(credentials)

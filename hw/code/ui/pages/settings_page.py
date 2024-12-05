@@ -4,7 +4,6 @@ from hw.code.conftest import Config
 from hw.code.ui.locators.settings import MainTabLocators, NotificationTabLocators, AccessListTabLocators, \
     LogsTabLocators
 from hw.code.ui.pages.base_page import BasePage
-from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 from hw.code.ui.pages.index_page import IndexPage
@@ -13,13 +12,13 @@ from hw.code.ui.pages.index_page import IndexPage
 class BaseSettingsPage(BasePage):
 
     def save_settings(self):
-        WebDriverWait(self.driver, 3).until(EC.visibility_of_element_located(MainTabLocators.SAVE_BUTTON))
-        WebDriverWait(self.driver, 3).until(EC.element_to_be_clickable(MainTabLocators.SAVE_BUTTON))
+        self.wait(3).until(EC.visibility_of_element_located(MainTabLocators.SAVE_BUTTON))
+        self.wait(3).until(EC.element_to_be_clickable(MainTabLocators.SAVE_BUTTON))
         self.click(MainTabLocators.SAVE_BUTTON)
 
     def cancel_settings(self):
-        WebDriverWait(self.driver, 3).until(EC.visibility_of_element_located(MainTabLocators.CANCEL_BUTTON))
-        WebDriverWait(self.driver, 3).until(EC.element_to_be_clickable(MainTabLocators.CANCEL_BUTTON))
+        self.wait(3).until(EC.visibility_of_element_located(MainTabLocators.CANCEL_BUTTON))
+        self.wait(3).until(EC.element_to_be_clickable(MainTabLocators.CANCEL_BUTTON))
         self.click(MainTabLocators.CANCEL_BUTTON)
 
 
@@ -32,13 +31,18 @@ class SettingsPage(BaseSettingsPage):
         'english_name': 'Alexander Batovkin',
         'tin': '744918114973'
     }
+    translation = {
+        'Общие': 'General',
+        'Обзор': 'Overview',
+        'Добавить email': 'Add email',
+    }
 
     def delete_account(self):
-        self.open()
-        WebDriverWait(self.driver, 10).until(EC.presence_of_element_located(MainTabLocators.DELETE_ACCOUNT_BUTTON))
+        self.open_and_wait()
+        self.wait(5).until(EC.presence_of_element_located(MainTabLocators.DELETE_ACCOUNT_BUTTON))
         self.click(MainTabLocators.DELETE_ACCOUNT_BUTTON)
-        WebDriverWait(self.driver, 10).until(EC.presence_of_element_located(MainTabLocators.DELETE_ACCOUNT_CONFIRM_BUTTON))
-        WebDriverWait(self.driver, 10).until(EC.visibility_of_element_located(MainTabLocators.DELETE_ACCOUNT_CONFIRM_BUTTON))
+        self.wait(5).until(EC.presence_of_element_located(MainTabLocators.DELETE_ACCOUNT_CONFIRM_BUTTON))
+        self.wait(5).until(EC.visibility_of_element_located(MainTabLocators.DELETE_ACCOUNT_CONFIRM_BUTTON))
         self.click(MainTabLocators.DELETE_ACCOUNT_CONFIRM_BUTTON)
         IndexPage.vkid_logged_in = False  # После удаления аккаунта пользователь разлогинивается из VK ID
 
@@ -61,19 +65,19 @@ class SettingsPage(BaseSettingsPage):
 
     def set_en_lang(self):
         self.click(MainTabLocators.INTERFACE_LANGUAGE_BUTTON)
-        WebDriverWait(self.driver, 10).until(EC.visibility_of_element_located(MainTabLocators.INTERFACE_LANGUAGE_EN_OPTION))
+        self.wait(5).until(EC.visibility_of_element_located(MainTabLocators.INTERFACE_LANGUAGE_EN_OPTION))
         self.click(MainTabLocators.INTERFACE_LANGUAGE_EN_OPTION)
         self.save_settings()
         self.driver.refresh()
-        WebDriverWait(self.driver, 10).until(EC.url_matches(Config.VK_ADS_SETTINGS_URL))
+        self.wait(5).until(EC.url_matches(Config.VK_ADS_SETTINGS_URL))
 
     def set_ru_lang(self):
         self.click(MainTabLocators.INTERFACE_LANGUAGE_BUTTON)
-        WebDriverWait(self.driver, 10).until(EC.visibility_of_element_located(MainTabLocators.INTERFACE_LANGUAGE_RU_OPTION))
+        self.wait(5).until(EC.visibility_of_element_located(MainTabLocators.INTERFACE_LANGUAGE_RU_OPTION))
         self.click(MainTabLocators.INTERFACE_LANGUAGE_RU_OPTION)
         self.save_settings()
         self.driver.refresh()
-        WebDriverWait(self.driver, 10).until(EC.url_matches(Config.VK_ADS_SETTINGS_URL))
+        self.wait(5).until(EC.url_matches(Config.VK_ADS_SETTINGS_URL))
 
 
 class NotificationSettingsPage(BaseSettingsPage):
@@ -95,7 +99,7 @@ class AccessSettingsPage(BaseSettingsPage):
         self.clear_field(AccessListTabLocators.USER_ID_INPUT)
         self.fill_field(AccessListTabLocators.USER_ID_INPUT, self.invalid_vk_ads_cabinet_id)
         self.click(AccessListTabLocators.SUBMIT_BUTTON)
-        WebDriverWait(self.driver, 2).until(EC.visibility_of_element_located(AccessListTabLocators.SOMETHING_WENT_WRONG_MESSAGE))
+        self.wait(2).until(EC.visibility_of_element_located(AccessListTabLocators.SOMETHING_WENT_WRONG_MESSAGE))
 
     def send_invite_to_valid_user(self):
         self.clear_field(AccessListTabLocators.USER_ID_INPUT)
@@ -106,13 +110,13 @@ class AccessSettingsPage(BaseSettingsPage):
         self.clear_field(AccessListTabLocators.USER_ID_INPUT)
         self.fill_field(AccessListTabLocators.USER_ID_INPUT, self.valid_vk_ads_cabinet_id)
         self.click(AccessListTabLocators.SUBMIT_BUTTON)
-        WebDriverWait(self.driver, 2).until(EC.visibility_of_element_located(AccessListTabLocators.USER_ALREADY_ADDED_MESSAGE))
+        self.wait(2).until(EC.visibility_of_element_located(AccessListTabLocators.USER_ALREADY_ADDED_MESSAGE))
 
     def delete_all_invites(self):
         while not self.exists(AccessListTabLocators.EMPTY_ACCESS_LIST_MESSAGE):
             self.focus(AccessListTabLocators.DELETE_INVITE_BUTTON)  # Кнопка не отобразится, пока не наведешь курсор
             self.click(AccessListTabLocators.DELETE_INVITE_BUTTON)
-            WebDriverWait(self.driver, 2).until(EC.visibility_of_element_located(AccessListTabLocators.MODAL))
+            self.wait(2).until(EC.visibility_of_element_located(AccessListTabLocators.MODAL))
             self.click(AccessListTabLocators.DELETE_INVITE_CONFIRM_BUTTON)
 
 
@@ -145,13 +149,13 @@ class LogsSettingsPage(BaseSettingsPage):
 
     def get_current_available_filter_options(self) -> list[str]:
         options = []
-        container = self.driver.find_element(*LogsTabLocators.FILTER_OPTIONS_CONTAINER)
+        container = self.find(LogsTabLocators.FILTER_OPTIONS_CONTAINER)
         for el in container.find_elements(By.XPATH, ".//*"):
             options.append(el.text)
         return options
 
     def get_options_check_status(self) -> list[bool]:
         options = []
-        for el in self.driver.find_elements(*LogsTabLocators.OPTION):
+        for el in self.find_all(LogsTabLocators.OPTION):
             options.append(el.is_selected())
         return options

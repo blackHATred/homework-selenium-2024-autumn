@@ -1,5 +1,3 @@
-from selenium.webdriver.support.wait import WebDriverWait
-
 from hw.code.conftest import Config
 from hw.code.ui.locators.register import RegisterLocators
 from hw.code.ui.pages.base_page import BasePage
@@ -8,6 +6,10 @@ from selenium.webdriver.support import expected_conditions as EC
 
 class RegisterPage(BasePage):
     url = Config.VK_ADS_REGISTER_URL
+    labels = {
+        'ru_welcome': 'Добро пожаловать в VK Рекламу',
+        'en_welcome': 'Welcome to VK Ads',
+    }
 
     def select_ru_lang(self):
         self.click(RegisterLocators.RU_LANG_BUTTON)
@@ -54,5 +56,5 @@ class RegisterPage(BasePage):
         self.click_new_cabinet_button()
         self.enter_with_valid_data(credentials)
         self.click_create_cabinet_button()
-        WebDriverWait(self.driver, 10).until(EC.url_contains(Config.VK_ADS_OVERVIEW_URL))
+        self.wait(15).until(EC.url_contains(Config.VK_ADS_OVERVIEW_URL))  # на регистрацию может потребоваться время
 

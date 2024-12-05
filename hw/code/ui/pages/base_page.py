@@ -34,33 +34,31 @@ class BasePage(object):
 
     def __init__(self, driver):
         self.driver = driver
-        # self.driver.get(self.url)
-        # self.is_opened()
 
     def wait(self, timeout=None):
         if timeout is None:
             timeout = 30
         return WebDriverWait(self.driver, timeout=timeout)
 
-    def open(self):
-        self.driver.get(self.url)
-
     def open_and_wait(self):
-        self.open()
+        self.driver.get(self.url)
         self.wait().until(EC.url_matches(self.url))
 
     def find(self, locator, timeout=None):
         return self.wait(timeout).until(EC.presence_of_element_located(locator))
 
+    def find_all(self, locator, timeout=None):
+        return self.wait(timeout).until(EC.presence_of_all_elements_located(locator))
+
     def exists(self, locator, timeout=2):
         try:
-            return WebDriverWait(self.driver, timeout).until(EC.presence_of_element_located(locator))
+            return self.wait(timeout).until(EC.presence_of_element_located(locator))
         except TimeoutException:
             return None
 
     def is_visible(self, locator, timeout=2):
         try:
-            return WebDriverWait(self.driver, timeout).until(EC.visibility_of_element_located(locator))
+            return self.wait(timeout).until(EC.visibility_of_element_located(locator))
         except TimeoutException:
             return None
 
@@ -78,7 +76,8 @@ class BasePage(object):
                 webdriver.ActionChains(self.driver).move_to_element(el).click(el).perform()
                 return
             except StaleElementReferenceException:
-                # Бывает при слишком быстрой работе с элементом
+                # Бывает при особенностях работы с DOM, подробнее тут:
+                # https://stackoverflow.com/questions/12967541/how-to-avoid-staleelementreferenceexception-in-selenium
                 time.sleep(1)
         raise CannotClickException(f'Cannot click on {locator}')
 
@@ -87,7 +86,7 @@ class BasePage(object):
 
     def clear_field(self, field_locator: tuple[str, str]):
         self.find(field_locator).clear()
-        WebDriverWait(self.driver, 1).until(lambda driver: self.get_field_value(field_locator) == '')
+        self.wait().until(lambda driver: self.get_field_value(field_locator) == '')
 
     def get_field_value(self, field_locator: tuple[str, str]):
         return self.find(field_locator).get_attribute('value')

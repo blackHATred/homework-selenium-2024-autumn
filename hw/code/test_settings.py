@@ -17,7 +17,7 @@ class TestMainTab(BaseCase):
     def test_settings_aside_button(self, settings_page, driver):
         # Можно перейти в настройки из любого места в ЛК, где доступно боковое меню
         driver.get(Config.VK_ADS_OVERVIEW_URL)  # Уйдем со страницы настроек на обзорную
-        WebDriverWait(driver, 10).until(EC.url_contains(Config.VK_ADS_OVERVIEW_URL))
+        settings_page.wait(10).until(EC.url_contains(Config.VK_ADS_OVERVIEW_URL))
         settings_page.click(AsideMenuSettingsButtonLocators.SETTINGS_BUTTON)
         assert settings_page.is_opened()
 
@@ -158,23 +158,22 @@ class TestMainTab(BaseCase):
         settings_page.fill_field(MainTabLocators.CABINET_NAME_INPUT, cab_name)
         settings_page.save_settings()
         settings_page.open_and_wait()
-        WebDriverWait(driver, 10).until(EC.visibility_of_element_located(MainTabLocators.CABINET_NAME_LABEL))
+        settings_page.wait(10).until(EC.visibility_of_element_located(MainTabLocators.CABINET_NAME_LABEL))
         assert settings_page.find(MainTabLocators.CABINET_NAME_LABEL).text == cab_name
 
         # Можно сохранить пустым, тогда вместо названия будет имя клиента
-        # settings_page.clear_field(SettingsLocators.CABINET_NAME_INPUT)
         # Компонент не реагирует непосредственно на изменение поля, надо эмулировать клавиатуру
         settings_page.find(MainTabLocators.CABINET_NAME_INPUT).send_keys('\b' * 255)
         settings_page.save_settings()
         settings_page.open_and_wait()
-        WebDriverWait(driver, 10).until(EC.visibility_of_element_located(MainTabLocators.CABINET_NAME_LABEL))
+        settings_page.wait(10).until(EC.visibility_of_element_located(MainTabLocators.CABINET_NAME_LABEL))
         assert settings_page.find(MainTabLocators.CABINET_NAME_LABEL).text == settings_page.valid_test_data['english_name']
 
         # При смене языка меняется язык всего интерфейса: в таббаре, боковом меню и главном блоке
         settings_page.set_en_lang()
-        assert settings_page.find(MainTabLocators.GENERAL_TAB).text == 'General'
-        assert settings_page.find(MainTabLocators.OVERVIEW_BUTTON).text == 'Overview'
-        assert settings_page.find(MainTabLocators.ADD_EMAIL_BUTTON).text == 'Add email'
+        assert settings_page.find(MainTabLocators.GENERAL_TAB).text == settings_page.translation['Общие']
+        assert settings_page.find(MainTabLocators.OVERVIEW_BUTTON).text == settings_page.translation['Обзор']
+        assert settings_page.find(MainTabLocators.ADD_EMAIL_BUTTON).text == settings_page.translation['Добавить email']
         # Теперь вернёмся на русский
         settings_page.set_ru_lang()
         assert settings_page.find(MainTabLocators.GENERAL_TAB).text == 'Общие'
@@ -183,7 +182,7 @@ class TestMainTab(BaseCase):
 
         # Нажатие кнопки "Список горячих клавиш" приводит к появлению модального окна с таблицей горячих клавиш
         settings_page.click(MainTabLocators.HOTKEYS_BUTTON)
-        WebDriverWait(driver, 10).until(EC.visibility_of_element_located(MainTabLocators.HOTKEYS_MODAL))
+        settings_page.wait(10).until(EC.visibility_of_element_located(MainTabLocators.HOTKEYS_MODAL))
         assert settings_page.exists(MainTabLocators.HOTKEYS_MODAL)
 
 
