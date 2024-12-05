@@ -9,12 +9,15 @@ class TestCampaignMenu(BaseCase):
 
     def test_first_campaign(self, campaign_page):
         campaign_page.open_and_wait()
-        campaign_page.click(CampaignLocators.MODAL_CLOSE_BUTTON)
-        assert campaign_page.find(CampaignLocators.FIRST_CAMPAIGN_HEADER, timeout=10)
+        #if campaign_page.find(CampaignLocators.MODAL_CLOSE_BUTTON):
+        #    campaign_page.click(CampaignLocators.MODAL_CLOSE_BUTTON)
+        assert campaign_page.find(CampaignLocators.CREATE_CAMPAIGN_BUTTON, timeout=10)
+    
     
     def test_create_campaign_button(self, campaign_page):
         campaign_page.open_and_wait()
-        campaign_page.click(CampaignLocators.MODAL_CLOSE_BUTTON)
+        #if campaign_page.find(CampaignLocators.MODAL_CLOSE_BUTTON):
+        #    campaign_page.click(CampaignLocators.MODAL_CLOSE_BUTTON)
         campaign_page.click(CampaignLocators.CREATE_CAMPAIGN_BUTTON)
         assert campaign_page.is_opened(url=Config.VK_ADS_CAMPAIGN_CREATE_URL)
 
@@ -104,6 +107,7 @@ class TestCampaignSettings(BaseCase):
         campaign_page.create_campaign()
         assert campaign_page.find(CampaignLocators.CAMPAIGN_SIDEBAR_ITEM, timeout=10)
 
+    #QQQ
     @pytest.mark.skip
     def test_valid_campaign_name(self, campaign_page):
         campaign_page.open_and_wait()
@@ -112,21 +116,20 @@ class TestCampaignSettings(BaseCase):
         campaign_page.set_campaign_name(new_campaign_name)
         assert campaign_page.verify_campaign_name_in_sidebar(new_campaign_name)
 
-    @pytest.mark.skip
     def test_tab_conversion(self, campaign_page):
         campaign_page.open_and_wait()
         campaign_page.create_campaign()
         campaign_page.click_tab_conversion(CampaignLocators.SITE_CONVERSIONS_OPTION)
         assert campaign_page.is_tab_selected(CampaignLocators.TAB_CONVERSION)
     
-    @pytest.mark.skip
+    
     def test_tab_branding(self, campaign_page):
         campaign_page.open_and_wait()
         campaign_page.create_campaign()
         campaign_page.click_tab_branding()
         assert campaign_page.is_tab_selected(CampaignLocators.TAB_BRANDING)
 
-    @pytest.mark.skip
+
     def test_footer_error(self, campaign_page):
         campaign_page.open_and_wait()
         campaign_page.create_campaign()
@@ -136,7 +139,7 @@ class TestCampaignSettings(BaseCase):
         campaign_page.click(CampaignLocators.CONTINUE_BUTTON)
         assert campaign_page.find(CampaignLocators.ERROR_BUTTON)
 
-    @pytest.mark.skip
+
     def test_footer_continue_button(self, campaign_page):
         campaign_page.open_and_wait()
         campaign_page.create_campaign()
@@ -146,6 +149,7 @@ class TestCampaignSettings(BaseCase):
         campaign_page.click(CampaignLocators.CONTINUE_BUTTON)
         assert campaign_page.find(CampaignLocators.GROUP_SIDEBAR_ITEM)
 
+    #QQQ
     @pytest.mark.skip
     def test_footer_save_as_draft(self, campaign_page_with_deleted_campaign):
         campaign_page_with_deleted_campaign.open_and_wait()
@@ -154,27 +158,26 @@ class TestCampaignSettings(BaseCase):
         assert campaign_page_with_deleted_campaign.find(CampaignLocators.DRAFT_ROWS)
 
     
-    @pytest.mark.skip
     def test_site_conversions_site_field(self, campaign_page):
         campaign_page.open_and_wait()
         campaign_page.create_campaign()
         campaign_page.click_tab_conversion(CampaignLocators.SITE_CONVERSIONS_OPTION)
         campaign_page.fill_field_and_save(CampaignLocators.SITE_URL_INPUT, 'dd.dd')
-        assert not campaign_page.find(CampaignLocators.SITE_URL_ERROR)
+        assert not campaign_page.exists(CampaignLocators.SITE_URL_ERROR)
 
-    @pytest.mark.skip
     def test_site_conversions_budged_field(self, campaign_page):
         campaign_page.open_and_wait()
         campaign_page.create_campaign()
         campaign_page.click_tab_conversion(CampaignLocators.SITE_CONVERSIONS_OPTION)
+        campaign_page.fill_field_and_save(CampaignLocators.SITE_URL_INPUT, 'dd.dd')
         campaign_page.fill_field_and_save(CampaignLocators.BUDGET_INPUT, '10')
-        assert not campaign_page.find(CampaignLocators.BUDGET_INPUT_ERROR)
+        assert not campaign_page.exists(CampaignLocators.BUDGET_INPUT_ERROR)
 
-    @pytest.mark.skip
     def test_site_conversions_textarea(self, campaign_page):
         campaign_page.open_and_wait()
         campaign_page.create_campaign()
         campaign_page.click_tab_conversion(CampaignLocators.SITE_CONVERSIONS_OPTION)
+        campaign_page.fill_field_and_save(CampaignLocators.SITE_URL_INPUT, 'dd.dd')
         long_text = "a" * 350  # Текст длиной 350 символов
         entered_text = campaign_page.enter_selling_proposition(long_text)
         assert len(entered_text) == 300
@@ -184,6 +187,7 @@ class TestCampaignSettings(BaseCase):
         campaign_page.open_and_wait()
         campaign_page.create_campaign()
         campaign_page.click_tab_conversion(CampaignLocators.SITE_CONVERSIONS_OPTION)
+        campaign_page.fill_field_and_save(CampaignLocators.SITE_URL_INPUT, 'dd.dd')
         campaign_page.click_budget_optimization_checkbox()
         assert not campaign_page.find(CampaignLocators.BUDGET_INPUT)
 
@@ -192,23 +196,26 @@ class TestCampaignSettings(BaseCase):
         campaign_page.open_and_wait()
         campaign_page.create_campaign()
         campaign_page.click_tab_conversion(CampaignLocators.SITE_CONVERSIONS_OPTION)
+        campaign_page.fill_field_and_save(CampaignLocators.SITE_URL_INPUT, 'dd.dd')
         campaign_page.select_budget_option("за всё время")
         assert campaign_page.find(CampaignLocators.REQUIRED_DATA_FIELD_SYMBOL)
 
-    @pytest.mark.skip
+   
     def test_start_date_input(self, campaign_page):
         campaign_page.open_and_wait()
         campaign_page.create_campaign()
         campaign_page.click_tab_conversion(CampaignLocators.SITE_CONVERSIONS_OPTION)
-        campaign_page.click(CampaignLocators.START_DATE_INPUT)
+        campaign_page.fill_field_and_save(CampaignLocators.SITE_URL_INPUT, 'dd.dd')
+        campaign_page.click(CampaignLocators.SHOW_CALENDAR_BUTTON)
         assert campaign_page.find(CampaignLocators.CALENDAR)
     
-    @pytest.mark.skip
+    
     def test_calendar_month(self, campaign_page):
         campaign_page.open_and_wait()
         campaign_page.create_campaign()
         campaign_page.click_tab_conversion(CampaignLocators.SITE_CONVERSIONS_OPTION)
-        campaign_page.click(CampaignLocators.START_DATE_INPUT)
+        campaign_page.fill_field_and_save(CampaignLocators.SITE_URL_INPUT, 'dd.dd')
+        campaign_page.click(CampaignLocators.SHOW_CALENDAR_BUTTON)
         campaign_page.find(CampaignLocators.CALENDAR)
         # Проверим, что месяц не совпадает с текущим
         current_month = campaign_page.get_current_month()
@@ -217,7 +224,7 @@ class TestCampaignSettings(BaseCase):
         assert current_month != next_month
 
 
-    @pytest.mark.skip
+
     def test_banner_radio_option_site(self, campaign_page):
         campaign_page.open_and_wait()
         campaign_page.create_campaign()
@@ -227,7 +234,6 @@ class TestCampaignSettings(BaseCase):
         assert self.find(CampaignLocators.ADVERTISED_SITE_LABEL)
 
 
-    @pytest.mark.skip
     def test_banner_frequency_settings(self, campaign_page):
         campaign_page.open_and_wait()
         campaign_page.create_campaign()
@@ -240,22 +246,22 @@ class TestCampaignSettings(BaseCase):
 
 class TestGroup(BaseCase):
     
-    @pytest.mark.skip
+
     def test_group_data(self, campaign_page):
         campaign_page.open_and_wait()
         campaign_page.create_group()
         # теперь у нас есть группа
         campaign_page.click(CampaignLocators.GROUP_SIDEBAR_ITEM)
-        assert campaign_page.find(CampaignLocators.GROUP_DATES_LABEL)
+        assert campaign_page.find(CampaignLocators.SET_DATES_BUTTON)
 
-    @pytest.mark.skip
+    
     def test_group_time(self, campaign_page):
         campaign_page.open_and_wait()
         campaign_page.create_group()
         campaign_page.click(CampaignLocators.SET_TIME_BUTTON)
         assert campaign_page.find(CampaignLocators.MY_TIME_BUTTON)
 
-    @pytest.mark.skip
+    
     def test_group_time_calendar_on(self, campaign_page):
         campaign_page.open_and_wait()
         campaign_page.create_group()
@@ -263,7 +269,7 @@ class TestGroup(BaseCase):
         campaign_page.click(CampaignLocators.TIME_SLOT_ACTIVE)
         assert campaign_page.find(CampaignLocators.TIME_SLOT_NOT_ACTIVE)
 
-    @pytest.mark.skip
+    
     def test_group_time_calendar_off(self, campaign_page):
         campaign_page.open_and_wait()
         campaign_page.create_group()
@@ -272,7 +278,7 @@ class TestGroup(BaseCase):
         campaign_page.click(CampaignLocators.TIME_SLOT_NOT_ACTIVE)
         assert campaign_page.find(CampaignLocators.TIME_SLOT_ACTIVE)
 
-    @pytest.mark.skip
+    
     def test_group_count(self, campaign_page):
         campaign_page.open_and_wait()
         campaign_page.create_group()
@@ -284,25 +290,26 @@ class TestGroup(BaseCase):
         
         assert final_count == new_count + 1
 
-    @pytest.mark.skip
+    
     def test_region_input_short_request(self, campaign_page):
         campaign_page.open_and_wait()
         campaign_page.create_group()
         campaign_page.fill_field(CampaignLocators.REGION_INPUT, 'a')
         assert campaign_page.find(CampaignLocators.SEARCH_TOOLTIP_SHORT_REQUEST)
 
-    @pytest.mark.skip
+    
     def test_region_input_no_results(self, campaign_page):
         campaign_page.open_and_wait()
         campaign_page.create_group()
         campaign_page.fill_field(CampaignLocators.REGION_INPUT, 'Aaaaaaaa')
         assert campaign_page.find(CampaignLocators.SEARCH_TOOLTIP_NO_RESULTS)
 
-    @pytest.mark.skip
+    
     def test_region_input_choose_option(self, campaign_page):
         campaign_page.open_and_wait()
         campaign_page.create_group()
         campaign_page.fill_field(CampaignLocators.REGION_INPUT, 'Ярославль')
+
         campaign_page.click(CampaignLocators.YAROSLAVL_OPTION)
         assert campaign_page.find(CampaignLocators.YAROSLAVL_LABEL)
 

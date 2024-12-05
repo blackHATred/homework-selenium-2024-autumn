@@ -59,6 +59,8 @@ def config(request):
 @pytest.fixture(scope='session')
 def driver():
     options = webdriver.ChromeOptions()
+    options.add_argument(r'--user-data-dir=C:\Users\krist\AppData\Local\Google\Chrome\User Data')
+    options.add_argument('--profile-directory=Profile 4')
     # можно включить для оптимизации, но тогда не будет грузить капчу
     # options.add_argument('--blink-settings=imagesEnabled=false')
     driver = webdriver.Chrome(options=options)

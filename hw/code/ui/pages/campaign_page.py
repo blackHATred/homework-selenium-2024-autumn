@@ -15,7 +15,7 @@ class CampaignPage(BasePage):
         self.click(CampaignLocators.CREATE_CAMPAIGN_BUTTON)
 
     def create_campaign(self):
-        self.click(CampaignLocators.MODAL_CLOSE_BUTTON)
+        #self.click(CampaignLocators.MODAL_CLOSE_BUTTON)
         self.click(CampaignLocators.CREATE_CAMPAIGN_BUTTON)
 
     def delete_campaign(self):
@@ -35,7 +35,7 @@ class CampaignPage(BasePage):
         self.find(CampaignLocators.MAIN_MENU_BUTTON)
         self.open_and_wait()
         self.click(CampaignLocators.CAMPAIGN_DROPDOWN_BUTTON)
-        self.click(CampaignLocators.DRAFTS_OPTION)
+        self.click(CampaignLocators.DRAFTS_BUTTON)
 
     def compare_dates(self):
         start_date = self.find(CampaignLocators.START_DATE_INPUT).get_attribute("value")
@@ -61,8 +61,10 @@ class CampaignPage(BasePage):
 
     def set_campaign_name(self, new_name):
         self.click(CampaignLocators.CAMPAIGN_NAME_INPUT)
-        self.fill_field(CampaignLocators.CAMPAIGN_NAME_INPUT, new_name)
-        self.find(CampaignLocators.CAMPAIGN_NAME_INPUT).send_keys(Keys.ENTER)
+        input_element = self.find(CampaignLocators.CAMPAIGN_NAME_INPUT)
+        input_element.clear()
+        input_element.send_keys(new_name)
+        input_element.send_keys(Keys.ENTER)
 
     def verify_campaign_name_in_sidebar(self, campaign_name):
         locator = (By.XPATH, f'//div[@class="MenuItem_cellWrapper__dSQle" and contains(@title, "{campaign_name}")]')
@@ -101,6 +103,12 @@ class CampaignPage(BasePage):
 
     def get_current_month(self):
         return self.find(CampaignLocators.CURRENT_MONTH).text
+    
+    def clear_and_send_keys(self, locator, text):
+        element = self.find(locator)
+        element.clear()
+        element.send_keys(text)
+        element.send_keys(Keys.ENTER)
     
     # Для группы:
 

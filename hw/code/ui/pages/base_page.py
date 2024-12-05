@@ -51,6 +51,9 @@ class BasePage(object):
 
     def find(self, locator, timeout=None):
         return self.wait(timeout).until(EC.presence_of_element_located(locator))
+    
+    def find_elements(self, locator, timeout=None):
+        return self.wait(timeout).until(EC.presence_of_all_elements_located(locator))
 
     def exists(self, locator, timeout=2):
         try:
