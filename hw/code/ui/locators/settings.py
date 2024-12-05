@@ -68,6 +68,8 @@ class LogsTabLocators:
     FILTER_CATEGORY_WHAT_CHANGED = (By.XPATH, '//button[span/span/span[contains(text(), "Что изменилось")]]')
     FILTER_CATEGORY_AUTHOR = (By.XPATH, '//button[span/span/span[contains(text(), "Автор изменения")]]')
     FILTER_OPTIONS_CONTAINER = (By.XPATH, '//*[contains(@class, "FilterSection_optionItems")]')
+    # Все доступные опции фильтрации в текущей вкладке
+    FILTER_OPTIONS = (By.XPATH, '//*[contains(@class, "FilterSection_filterItem")]/label')
 
     CHECK_ALL_BUTTON = (By.XPATH, '//button[span/span[contains(text(), "Выбрать все")]]')
     UNCHECK_ALL_BUTTON = (By.XPATH, '//button[span/span[contains(text(), "Сбросить")]]')

@@ -1,3 +1,4 @@
+from selenium.common import TimeoutException
 from selenium.webdriver.common.by import By
 
 from hw.code.conftest import Config
@@ -133,15 +134,33 @@ class LogsSettingsPage(BaseSettingsPage):
         'Автор изменения': ('VK Реклама', )
     }
 
-    def apply_one_filter(self):
+    def open_filter_modal(self):
         self.focus(LogsTabLocators.FILTER_BUTTON)
+        # Делаем n повторов, пока не откроется модальное окно
+        # Это нужно потому что иногда модальное окно тупит
+        counter = 0
+        while counter < Config.CLICK_RETRIES:
+            counter += 1
+            try:
+                self.click(LogsTabLocators.FILTER_BUTTON)
+                self.wait(1).until(EC.visibility_of_element_located(LogsTabLocators.FILTER_OPTIONS_CONTAINER))
+                return
+            except TimeoutException as e:
+                if counter == Config.CLICK_RETRIES:
+                    raise e
+
+    def delete_all_filters(self):
+        while self.exists(LogsTabLocators.APPLIED_FILTER_ELEMENT):
+            self.click(LogsTabLocators.FILTER_DELETE_BUTTON)
+
+    def apply_one_filter(self):
+        self.open_filter_modal()
         self.click(LogsTabLocators.FILTER_BUTTON)
         self.click(LogsTabLocators.CHECK_ALL_BUTTON)
         self.click(LogsTabLocators.APPLY_FILTER_BUTTON)
 
     def apply_two_filters(self):
-        self.focus(LogsTabLocators.FILTER_BUTTON)
-        self.click(LogsTabLocators.FILTER_BUTTON)
+        self.open_filter_modal()
         self.click(LogsTabLocators.CHECK_ALL_BUTTON)
         self.click(LogsTabLocators.FILTER_CATEGORY_WHAT_CHANGED)
         self.click(LogsTabLocators.CHECK_ALL_BUTTON)
@@ -149,9 +168,8 @@ class LogsSettingsPage(BaseSettingsPage):
 
     def get_current_available_filter_options(self) -> list[str]:
         options = []
-        container = self.find(LogsTabLocators.FILTER_OPTIONS_CONTAINER)
-        for el in container.find_elements(By.XPATH, ".//*"):
-            options.append(el.text)
+        for el in self.find_all(LogsTabLocators.FILTER_OPTIONS):
+            options.append(el.text.strip())
         return options
 
     def get_options_check_status(self) -> list[bool]:

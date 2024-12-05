@@ -171,11 +171,13 @@ class TestMainTab(BaseCase):
 
         # При смене языка меняется язык всего интерфейса: в таббаре, боковом меню и главном блоке
         settings_page.set_en_lang()
+        settings_page.open_and_wait()
         assert settings_page.find(MainTabLocators.GENERAL_TAB).text == settings_page.translation['Общие']
         assert settings_page.find(MainTabLocators.OVERVIEW_BUTTON).text == settings_page.translation['Обзор']
         assert settings_page.find(MainTabLocators.ADD_EMAIL_BUTTON).text == settings_page.translation['Добавить email']
         # Теперь вернёмся на русский
         settings_page.set_ru_lang()
+        settings_page.open_and_wait()
         assert settings_page.find(MainTabLocators.GENERAL_TAB).text == 'Общие'
         assert settings_page.find(MainTabLocators.OVERVIEW_BUTTON).text == 'Обзор'
         assert settings_page.find(MainTabLocators.ADD_EMAIL_BUTTON).text == 'Добавить email'
@@ -252,6 +254,9 @@ class TestAccessListTab(BaseCase):
         # После отправки приглашения список пользователей не пуст
         access_settings_page.click(AccessListTabLocators.SEND_INVITE_BUTTON)
         access_settings_page.send_invite_to_valid_user()
+        # Ждём, пока данные сохранятся
+        access_settings_page.wait(5).until(EC.visibility_of_element_located(AccessListTabLocators.THESE_USERS_HAVE_ACCESS_LABEL))
+        access_settings_page.open_and_wait()  # Обновляем страницу, чтобы убедиться, что данные сохранились
         assert access_settings_page.exists(AccessListTabLocators.THESE_USERS_HAVE_ACCESS_LABEL)
 
     def test_delete_invite(self, access_settings_page):
@@ -295,10 +300,11 @@ class TestChangesHistoryTab(BaseCase):
     @pytest.fixture(autouse=True)
     def setup(self, logs_settings_page):
         logs_settings_page.open_and_wait()
+        logs_settings_page.delete_all_filters()  # Для идемпотентности тестов
 
     def test_filter_modal(self, logs_settings_page, driver):
         # Нажатие на кнопку "Фильтр" открывает модальное окно с фильтрами
-        logs_settings_page.click(LogsTabLocators.FILTER_BUTTON)
+        logs_settings_page.open_filter_modal()
         assert logs_settings_page.is_visible(LogsTabLocators.FILTER_CATEGORY_OBJECT_TYPE)
 
         # Выбор категории приводит к отображению соответствующих категории опций
@@ -337,7 +343,7 @@ class TestChangesHistoryTab(BaseCase):
         assert not logs_settings_page.exists(LogsTabLocators.FILTER_CATEGORY_OBJECT_TYPE)
 
         # Нажатие на кнопку "Применить" применяет выбранные фильтры
-        logs_settings_page.click(LogsTabLocators.FILTER_BUTTON)
+        logs_settings_page.open_filter_modal()
         logs_settings_page.click(LogsTabLocators.FILTER_CATEGORY_OBJECT_TYPE)
         logs_settings_page.click(LogsTabLocators.CHECK_ALL_BUTTON)
         logs_settings_page.click(LogsTabLocators.APPLY_FILTER_BUTTON)

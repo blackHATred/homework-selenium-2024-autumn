@@ -67,18 +67,18 @@ class BasePage(object):
         webdriver.ActionChains(self.driver).move_to_element(el).perform()
 
     def click(self, locator, timeout=None):
-        el = self.find(locator, timeout=timeout)
-        self.wait(timeout).until(EC.element_to_be_clickable(locator))
         counter = 0
         while counter < Config.CLICK_RETRIES:
             counter += 1
+            el = self.find(locator, timeout=timeout)
+            self.wait(timeout).until(EC.element_to_be_clickable(locator))
             try:
                 webdriver.ActionChains(self.driver).move_to_element(el).click(el).perform()
                 return
             except StaleElementReferenceException:
                 # Бывает при особенностях работы с DOM, подробнее тут:
                 # https://stackoverflow.com/questions/12967541/how-to-avoid-staleelementreferenceexception-in-selenium
-                time.sleep(1)
+                pass
         raise CannotClickException(f'Cannot click on {locator}')
 
     def fill_field(self, field_locator: tuple[str, str], value: str):

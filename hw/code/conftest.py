@@ -1,5 +1,6 @@
 import pytest
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 
 
 class Config:
@@ -22,7 +23,7 @@ class Config:
 def pytest_addoption(parser):
     parser.addoption('--browser', default='chrome')
     parser.addoption('--url', default=Config.VK_ADS_URL)
-    parser.addoption('--headless', action='store_false')
+    parser.addoption('--headless', action='store_true')
     parser.addoption('--debug_log', action='store_true')
     parser.addoption('--selenoid', action='store_true')
     parser.addoption('--vnc', action='store_true')
@@ -55,11 +56,31 @@ def config(request):
 
 
 @pytest.fixture(scope='session')
-def driver():
-    options = webdriver.ChromeOptions()
-    # можно включить для оптимизации, но тогда не будет грузить капчу
-    # options.add_argument('--blink-settings=imagesEnabled=false')
-    driver = webdriver.Chrome(options=options)
+def driver(config):
+    browser = config['browser']
+    url = config['url']
+    selenoid = config['selenoid']
+    vnc = config['vnc']
+    options = Options()
+    if config['headless']:
+        options.add_argument('--headless')
+    if selenoid:
+        capabilities = {
+            'browserName': 'chrome',
+            'version': '118.0',
+        }
+        if vnc:
+            capabilities['enableVNC'] = True
+        driver = webdriver.Remote(
+            'http://127.0.0.1:4444/wd/hub',
+            options=options,
+        )
+    elif browser == 'chrome':
+        driver = webdriver.Chrome(options=options)
+    elif browser == 'firefox':
+        driver = webdriver.Firefox(options=options)
+    else:
+        raise RuntimeError(f'Unsupported browser: "{browser}"')
     # Замедляем скорость интернета, чтобы не ловить ошибки из-за ограничений на кол-во запросов
     driver.set_network_conditions(
         offline=False,
@@ -68,5 +89,6 @@ def driver():
         upload_throughput=500 * 1024,
     )
     driver.maximize_window()
+    driver.get(url)
     yield driver
     driver.quit()
