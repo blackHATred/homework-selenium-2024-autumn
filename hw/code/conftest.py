@@ -27,6 +27,8 @@ class Config:
     USER_PROFILE_DIR = 'Profile 1'
     VK_ID_LOGGED_IN = USER_DATA_DIR is not None
     MAIL_RU_LOGGED_IN = USER_DATA_DIR is not None
+    VK_ADS_CAMPAIGN_URL = f'{VK_ADS_CABINET_URL}/dashboard'
+    VK_ADS_CAMPAIGN_CREATE_URL = f'{VK_ADS_CABINET_URL}/new_create/ad_plan'
 
     CLICK_RETRIES = 3
     FILL_RETRIES = 3

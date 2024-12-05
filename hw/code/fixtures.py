@@ -10,6 +10,7 @@ from hw.code.ui.pages.leadform_page import LeadFormsPage
 from hw.code.ui.pages.register_page import RegisterPage
 from hw.code.ui.pages.settings_page import SettingsPage, NotificationSettingsPage, AccessSettingsPage, LogsSettingsPage
 from hw.code.ui.pages.surveys_page import SurveysPage
+from hw.code.ui.pages.campaign_page import CampaignPage
 
 
 @pytest.fixture(scope='session')
@@ -113,3 +114,15 @@ def register_page(driver, authorized_user, credentials):
     IndexPage(driver).login(credentials)
     driver.get(RegisterPage.url)
     return RegisterPage(driver)
+
+@pytest.fixture
+def campaign_page_with_deleted_campaign(driver, campaign_page):
+    driver.get(Config.VK_ADS_CAMPAIGN_URL)
+    # удалим кампанию, если она есть
+    campaign_page.delete_campaign()
+    return CampaignPage(driver)
+
+@pytest.fixture
+def campaign_page(driver, authorized_user):
+    driver.get(CampaignPage.url)
+    return CampaignPage(driver)
