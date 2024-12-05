@@ -6,7 +6,7 @@ from selenium.webdriver.support import expected_conditions as EC
 
 from hw.code.fixtures import *
 from hw.code.ui.locators.settings import MainTabLocators, AsideMenuSettingsButtonLocators, NotificationTabLocators, \
-    AccessListTabLocators
+    AccessListTabLocators, LogsTabLocators
 
 
 class TestMainTab(BaseCase):
@@ -35,7 +35,7 @@ class TestMainTab(BaseCase):
         settings_page.type_valid_data_on_main_tab()
         settings_page.save_settings()
         # Обновляем страницу и проверяем, что сохранения прошли успешно
-        settings_page.open()
+        settings_page.open_and_wait()
         assert settings_page.get_field_value(MainTabLocators.TEL_INPUT) == SettingsPage.valid_test_data['tel']
 
     def test_tel_validation(self, settings_page):
@@ -293,5 +293,65 @@ class TestAccessListTab(BaseCase):
 
 
 class TestChangesHistoryTab(BaseCase):
-    pass
+    @pytest.fixture(autouse=True)
+    def setup(self, logs_settings_page):
+        logs_settings_page.open_and_wait()
 
+    def test_filter_modal(self, logs_settings_page, driver):
+        # Нажатие на кнопку "Фильтр" открывает модальное окно с фильтрами
+        logs_settings_page.click(LogsTabLocators.FILTER_BUTTON)
+        assert logs_settings_page.is_visible(LogsTabLocators.FILTER_CATEGORY_OBJECT_TYPE)
+
+        # Выбор категории приводит к отображению соответствующих категории опций
+        # Тип объекта
+        options = logs_settings_page.get_current_available_filter_options()
+        for option in logs_settings_page.filter_categories['Тип объекта']:
+            assert option in options
+        # Что изменилось
+        logs_settings_page.click(LogsTabLocators.FILTER_CATEGORY_WHAT_CHANGED)
+        options = logs_settings_page.get_current_available_filter_options()
+        for option in logs_settings_page.filter_categories['Что изменилось']:
+            assert option in options
+        # Автор изменения
+        logs_settings_page.click(LogsTabLocators.FILTER_CATEGORY_AUTHOR)
+        options = logs_settings_page.get_current_available_filter_options()
+        for option in logs_settings_page.filter_categories['Автор изменения']:
+            assert option in options
+
+        logs_settings_page.click(LogsTabLocators.FILTER_CATEGORY_OBJECT_TYPE)
+        # Кнопка "Выбрать все" выбирает все опции, кнопка "Сбросить" отсутствует, т.к. ничего не выбрано
+        assert logs_settings_page.exists(LogsTabLocators.CHECK_ALL_BUTTON)
+        assert not logs_settings_page.exists(LogsTabLocators.UNCHECK_ALL_BUTTON)
+        logs_settings_page.click(LogsTabLocators.CHECK_ALL_BUTTON)
+        options = logs_settings_page.get_options_check_status()
+        assert all((opt for opt in options))
+
+        # Когда выбрана хоть одна опция, то появляется кнопка "Сбросить", а "Выбрать все" исчезает
+        assert not logs_settings_page.exists(LogsTabLocators.CHECK_ALL_BUTTON)
+        assert logs_settings_page.exists(LogsTabLocators.UNCHECK_ALL_BUTTON)
+        logs_settings_page.click(LogsTabLocators.UNCHECK_ALL_BUTTON)
+        options = logs_settings_page.get_options_check_status()
+        assert not any((opt for opt in options))
+
+        # Нажатие на кнопку "Отмена" закрывает модальное окно
+        logs_settings_page.click(LogsTabLocators.CANCEL_FILTER_BUTTON)
+        assert not logs_settings_page.exists(LogsTabLocators.FILTER_CATEGORY_OBJECT_TYPE)
+
+        # Нажатие на кнопку "Применить" применяет выбранные фильтры
+        logs_settings_page.click(LogsTabLocators.FILTER_BUTTON)
+        logs_settings_page.click(LogsTabLocators.FILTER_CATEGORY_OBJECT_TYPE)
+        logs_settings_page.click(LogsTabLocators.CHECK_ALL_BUTTON)
+        logs_settings_page.click(LogsTabLocators.APPLY_FILTER_BUTTON)
+        assert logs_settings_page.exists(LogsTabLocators.APPLIED_FILTER_ELEMENT)
+
+    def test_applied_filters_list(self, logs_settings_page):
+        # При применении одного фильтра кнопка "Сбросить все" отсутствует
+        logs_settings_page.apply_one_filter()
+        assert not logs_settings_page.exists(LogsTabLocators.FILTER_DELETE_ALL_BUTTON)
+        logs_settings_page.click(LogsTabLocators.FILTER_DELETE_BUTTON)
+        # При применении двух фильтров кнопка "Сбросить все" появляется
+        logs_settings_page.apply_two_filters()
+        assert logs_settings_page.exists(LogsTabLocators.FILTER_DELETE_ALL_BUTTON)
+        # При нажатии на кнопку "Сбросить все" все фильтры сбрасываются
+        logs_settings_page.click(LogsTabLocators.FILTER_DELETE_ALL_BUTTON)
+        assert not logs_settings_page.exists(LogsTabLocators.APPLIED_FILTER_ELEMENT)

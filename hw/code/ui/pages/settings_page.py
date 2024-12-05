@@ -1,5 +1,8 @@
+from selenium.webdriver.common.by import By
+
 from hw.code.conftest import Config
-from hw.code.ui.locators.settings import MainTabLocators, NotificationTabLocators, AccessListTabLocators
+from hw.code.ui.locators.settings import MainTabLocators, NotificationTabLocators, AccessListTabLocators, \
+    LogsTabLocators
 from hw.code.ui.pages.base_page import BasePage
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -112,3 +115,43 @@ class AccessSettingsPage(BaseSettingsPage):
             WebDriverWait(self.driver, 2).until(EC.visibility_of_element_located(AccessListTabLocators.MODAL))
             self.click(AccessListTabLocators.DELETE_INVITE_CONFIRM_BUTTON)
 
+
+class LogsSettingsPage(BaseSettingsPage):
+    url = Config.VK_ADS_SETTINGS_LOGS_URL
+    filter_categories = {
+        'Тип объекта': ('Кампания', 'Группа объявлений', 'Объявление', 'Бюджет', 'Список офлайн-конверсий'),
+        'Что изменилось': (
+            'Пополнение бюджета', 'Возврат средств',  # Подкатегория "Бюджет"
+            'Кампания создана', 'Кампания восстановлена', 'Название', 'Статус', 'Макс. цена конверсии', 'Бюджет', 'Даты проведения',  # Подкатегория "Кампания"
+            'Группа создана', 'Группа удалена', 'Группа восстановлена', 'Название', 'Статус', 'Макс. цена конверсии', 'Бюджет', 'Даты проведения', 'Время показа', 'Регионы показа', 'Пол', 'Возраст', 'Возрастная маркировка', 'Интересы', 'Пользовательские аудитории', 'Места размещения', 'Устройства',  # Подкатегория "Группа"
+            'Создан', 'Обновлен', 'Удален'  # Подкатегория "Список офлайн-конверсий"
+        ),
+        'Автор изменения': ('VK Реклама', )
+    }
+
+    def apply_one_filter(self):
+        self.focus(LogsTabLocators.FILTER_BUTTON)
+        self.click(LogsTabLocators.FILTER_BUTTON)
+        self.click(LogsTabLocators.CHECK_ALL_BUTTON)
+        self.click(LogsTabLocators.APPLY_FILTER_BUTTON)
+
+    def apply_two_filters(self):
+        self.focus(LogsTabLocators.FILTER_BUTTON)
+        self.click(LogsTabLocators.FILTER_BUTTON)
+        self.click(LogsTabLocators.CHECK_ALL_BUTTON)
+        self.click(LogsTabLocators.FILTER_CATEGORY_WHAT_CHANGED)
+        self.click(LogsTabLocators.CHECK_ALL_BUTTON)
+        self.click(LogsTabLocators.APPLY_FILTER_BUTTON)
+
+    def get_current_available_filter_options(self) -> list[str]:
+        options = []
+        container = self.driver.find_element(*LogsTabLocators.FILTER_OPTIONS_CONTAINER)
+        for el in container.find_elements(By.XPATH, ".//*"):
+            options.append(el.text)
+        return options
+
+    def get_options_check_status(self) -> list[bool]:
+        options = []
+        for el in self.driver.find_elements(*LogsTabLocators.OPTION):
+            options.append(el.is_selected())
+        return options

@@ -62,5 +62,27 @@ class AccessListTabLocators:
     THESE_USERS_HAVE_ACCESS_LABEL = (By.XPATH, '//span[contains(text(), "Имеют доступ к этому кабинету")]')
 
 
-class ChangesHistoryTabLocators:
-    pass
+class LogsTabLocators:
+    FILTER_BUTTON = (By.XPATH, '//*[@data-testid="filter-button"]')
+    FILTER_CATEGORY_OBJECT_TYPE = (By.XPATH, '//button[span/span/span[contains(text(), "Тип объекта")]]')
+    FILTER_CATEGORY_WHAT_CHANGED = (By.XPATH, '//button[span/span/span[contains(text(), "Что изменилось")]]')
+    FILTER_CATEGORY_AUTHOR = (By.XPATH, '//button[span/span/span[contains(text(), "Автор изменения")]]')
+    FILTER_OPTIONS_CONTAINER = (By.XPATH, '//*[contains(@class, "FilterSection_optionItems")]')
+
+    CHECK_ALL_BUTTON = (By.XPATH, '//button[span/span[contains(text(), "Выбрать все")]]')
+    UNCHECK_ALL_BUTTON = (By.XPATH, '//button[span/span[contains(text(), "Сбросить")]]')
+    APPLY_FILTER_BUTTON = (By.XPATH, '//button[span/span[contains(text(), "Применить")]]')
+    CANCEL_FILTER_BUTTON = (By.XPATH, '//button[span/span[contains(text(), "Отмена")]]')
+
+    # Этим двум локаторам соответствуют несколько кнопок, при обработке нужно учитывать порядковый номер применяемого фильтра
+    APPLIED_FILTER_ELEMENT = (By.XPATH, '//span[contains(@class, "vkuiFootnote")]')
+    FILTER_DELETE_BUTTON = (By.XPATH, '//span[contains(@class, "vkuiFootnote")]/button')
+    FILTER_DELETE_ALL_BUTTON = (By.XPATH, '//button[span/span[contains(text(), "Сбросить все")]]')
+
+    SEARCH_INPUT = (By.XPATH, '//input[@placeholder="Поиск"]')
+
+    # Локатор для всех доступных опций фильтрации
+    OPTION = (By.XPATH, '//input[contains(@class, "vkuiCheckbox")]')
+
+
+

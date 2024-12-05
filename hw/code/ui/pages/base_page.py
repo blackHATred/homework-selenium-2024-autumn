@@ -1,15 +1,20 @@
 import time
 
 from selenium import webdriver
-from selenium.common import TimeoutException
+from selenium.common import TimeoutException, StaleElementReferenceException
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
+from hw.code.conftest import Config
 from hw.code.ui.locators.index import IndexLocators
 
 
 class PageNotOpenedException(Exception):
+    pass
+
+
+class CannotClickException(Exception):
     pass
 
 
@@ -66,7 +71,16 @@ class BasePage(object):
     def click(self, locator, timeout=None):
         el = self.find(locator, timeout=timeout)
         self.wait(timeout).until(EC.element_to_be_clickable(locator))
-        webdriver.ActionChains(self.driver).move_to_element(el).click(el).perform()
+        counter = 0
+        while counter < Config.CLICK_RETRIES:
+            counter += 1
+            try:
+                webdriver.ActionChains(self.driver).move_to_element(el).click(el).perform()
+                return
+            except StaleElementReferenceException:
+                # Бывает при слишком быстрой работе с элементом
+                time.sleep(1)
+        raise CannotClickException(f'Cannot click on {locator}')
 
     def fill_field(self, field_locator: tuple[str, str], value: str):
         self.find(field_locator).send_keys(value)

@@ -8,7 +8,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 from hw.code.conftest import Config
 from hw.code.ui.pages.index_page import IndexPage
 from hw.code.ui.pages.register_page import RegisterPage
-from hw.code.ui.pages.settings_page import SettingsPage, NotificationSettingsPage, AccessSettingsPage
+from hw.code.ui.pages.settings_page import SettingsPage, NotificationSettingsPage, AccessSettingsPage, LogsSettingsPage
 
 
 @pytest.fixture(scope='session')
@@ -65,20 +65,22 @@ def registered_user(driver, authorized_user, credentials):
 
 @pytest.fixture
 def settings_page(driver, registered_user):
-    driver.get(SettingsPage.url)
     return SettingsPage(driver)
 
 
 @pytest.fixture
 def notification_settings_page(driver, registered_user):
-    driver.get(NotificationSettingsPage.url)
     return NotificationSettingsPage(driver)
 
 
 @pytest.fixture
 def access_settings_page(driver, registered_user):
-    driver.get(AccessSettingsPage.url)
     return AccessSettingsPage(driver)
+
+
+@pytest.fixture
+def logs_settings_page(driver, registered_user):
+    return LogsSettingsPage(driver)
 
 
 @pytest.fixture

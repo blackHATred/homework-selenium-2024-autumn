@@ -30,7 +30,7 @@ class IndexPage(BasePage):
         IndexPage.mailru_logged_in = True
 
         # Может открыться одна из двух страниц, поэтому обрабатываем открытие следующей страницы не через is_opened()
-        timeout = 30
+        timeout = 60  # c поправкой на возможную капчу
         started = time.time()
         while time.time() - started < timeout:
             # Может открыться страница регистрации или сразу ЛК

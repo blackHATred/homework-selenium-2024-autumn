@@ -6,7 +6,7 @@ class Config:
     VK_ID_URL = 'https://id.vk.com'
     VK_ADS_URL = 'https://ads.vk.com'
     VK_ADS_CABINET_URL = f'{VK_ADS_URL}/hq'
-    MAIL_RU = 'https://mail.ru'
+    MAIL_RU_URL = 'https://mail.ru'
     VK_ADS_OVERVIEW_URL = f'{VK_ADS_CABINET_URL}/overview'
     VK_ADS_DASHBOARD_URL = f'{VK_ADS_CABINET_URL}/dashboard'
     VK_ADS_REGISTER_URL = f'{VK_ADS_CABINET_URL}/registration'
@@ -15,6 +15,8 @@ class Config:
     VK_ADS_SETTINGS_NOTIFICATIONS_URL = f'{VK_ADS_SETTINGS_URL}/notifications'
     VK_ADS_SETTINGS_ACCESS_URL = f'{VK_ADS_SETTINGS_URL}/access'
     VK_ADS_SETTINGS_LOGS_URL = f'{VK_ADS_SETTINGS_URL}/logs'
+
+    CLICK_RETRIES = 3
 
 
 def pytest_addoption(parser):
