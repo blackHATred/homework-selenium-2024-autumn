@@ -25,12 +25,7 @@ def index_page(driver):
 
 
 @pytest.fixture
-def auth_page(driver):
-    return IndexPage(driver)
-
-
-@pytest.fixture
-def authorized_user(driver, auth_page, credentials):
+def authorized_user(driver, index_page, credentials):
     # Фикстура для авторизованного через VK ID пользователя (необязательно зарегистрированного)
     driver.get(IndexPage.url)
     WebDriverWait(driver, 5).until(lambda d: d.current_url.rstrip('/') in (
@@ -42,8 +37,10 @@ def authorized_user(driver, auth_page, credentials):
         # Пользователь авторизован
         return IndexPage(driver)
     # Пользователь авторизован, но не зарегистрирован
-    IndexPage(driver).login(credentials)
-    return IndexPage(driver)
+    page = IndexPage(driver)
+    page.login(credentials)
+    page.wait(10).until(lambda d: d.current_url in (Config.VK_ADS_OVERVIEW_URL, Config.VK_ADS_REGISTER_URL))
+    return page
 
 
 @pytest.fixture
@@ -56,10 +53,11 @@ def registered_user(driver, authorized_user, credentials):
         Config.VK_ADS_REGISTER_URL,
         Config.VK_ADS_URL,
     ))
-    if Config.VK_ADS_OVERVIEW_URL in driver.current_url:
-        return RegisterPage(driver)
-    RegisterPage(driver).register(credentials)
-    return RegisterPage(driver)
+    reg_page = RegisterPage(driver)
+    if Config.VK_ADS_OVERVIEW_URL not in driver.current_url:
+        # Пользователь не зарегистрирован, регистрируем его
+        reg_page.register(credentials)
+    return reg_page
 
 
 @pytest.fixture

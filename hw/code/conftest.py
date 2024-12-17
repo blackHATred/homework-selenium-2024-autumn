@@ -17,10 +17,11 @@ class Config:
     VK_ADS_SETTINGS_ACCESS_URL = f'{VK_ADS_SETTINGS_URL}/access'
     VK_ADS_SETTINGS_LOGS_URL = f'{VK_ADS_SETTINGS_URL}/logs'
 
-    USER_DATA_DIR = '/Users/smail/Library/Application Support/Google/Chrome'
+    USER_DATA_DIR = r'C:\Users\smail\AppData\Local\Google\Chrome\User Data'
+    # USER_DATA_DIR = None
     USER_PROFILE_DIR = 'Profile 1'
-    VK_ID_LOGGED_IN = True
-    MAIL_RU_LOGGED_IN = True
+    VK_ID_LOGGED_IN = USER_DATA_DIR is not None
+    MAIL_RU_LOGGED_IN = USER_DATA_DIR is not None
 
     CLICK_RETRIES = 3
 

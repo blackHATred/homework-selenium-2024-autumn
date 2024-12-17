@@ -40,9 +40,10 @@ class BasePage(object):
             timeout = 30
         return WebDriverWait(self.driver, timeout=timeout)
 
-    def open_and_wait(self):
-        self.driver.get(self.url)
-        self.wait().until(EC.url_matches(self.url))
+    def open_and_wait(self, url: str = None):
+        url = url if url is not None else self.url
+        self.driver.get(url)
+        self.wait().until(EC.url_matches(url))
 
     def find(self, locator, timeout=None):
         return self.wait(timeout).until(EC.presence_of_element_located(locator))

@@ -4,12 +4,17 @@ from hw.code.conftest import Config
 from hw.code.ui.locators.auth import AuthLocators
 from hw.code.ui.locators.index import IndexLocators
 from hw.code.ui.pages.base_page import BasePage, PageNotOpenedException
+from selenium.webdriver.support import expected_conditions as EC
 
 
 class IndexPage(BasePage):
     url = Config.VK_ADS_URL
     vkid_logged_in = Config.VK_ID_LOGGED_IN
     mailru_logged_in = Config.MAIL_RU_LOGGED_IN
+
+    def click_go_to_cabinet_button(self):
+        self.click(IndexLocators.GO_TO_CABINET_BUTTON)
+        self.wait(10).until(EC.url_contains(Config.VK_ID_URL))
 
     def login(self, credentials):
         if IndexPage.vkid_logged_in:

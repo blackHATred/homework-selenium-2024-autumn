@@ -11,6 +11,9 @@ class RegisterPage(BasePage):
         'en_welcome': 'Welcome to VK Ads',
     }
 
+    def get_title(self):
+        return self.find(RegisterLocators.TITLE).text
+
     def select_ru_lang(self):
         self.click(RegisterLocators.RU_LANG_BUTTON)
 
@@ -19,6 +22,7 @@ class RegisterPage(BasePage):
 
     def click_new_cabinet_button(self):
         self.click(RegisterLocators.NEW_CABINET_BUTTON)
+        self.wait(2).until(EC.url_contains(Config.VK_ADS_REGISTER_NEW_URL))
 
     def click_advertiser_option(self):
         self.click(RegisterLocators.ADVERTISER_OPTION)
@@ -58,3 +62,22 @@ class RegisterPage(BasePage):
         self.click_create_cabinet_button()
         self.wait(15).until(EC.url_contains(Config.VK_ADS_OVERVIEW_URL))  # на регистрацию может потребоваться время
 
+    @property
+    def is_legal_entity_option_visible(self):
+        return self.is_visible(RegisterLocators.LEGAL_ENTITY_CHECKBOX)
+
+    @property
+    def is_individual_option_visible(self):
+        return self.is_visible(RegisterLocators.LEGAL_ENTITY_CHECKBOX)
+
+    @property
+    def is_tin_input_visible(self):
+        return self.is_visible(RegisterLocators.TIN_INPUT)
+
+    @property
+    def is_full_name_input_visible(self):
+        return self.is_visible(RegisterLocators.FULL_NAME_INPUT)
+
+    @property
+    def is_required_field_alert_shown(self):
+        return self.is_visible(RegisterLocators.REQUIRED_FIELD_ALERT)
