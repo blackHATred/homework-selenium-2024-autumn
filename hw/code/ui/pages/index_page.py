@@ -8,8 +8,8 @@ from hw.code.ui.pages.base_page import BasePage, PageNotOpenedException
 
 class IndexPage(BasePage):
     url = Config.VK_ADS_URL
-    vkid_logged_in = False
-    mailru_logged_in = False
+    vkid_logged_in = Config.VK_ID_LOGGED_IN
+    mailru_logged_in = Config.MAIL_RU_LOGGED_IN
 
     def login(self, credentials):
         if IndexPage.vkid_logged_in:

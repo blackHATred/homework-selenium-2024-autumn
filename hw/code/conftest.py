@@ -17,6 +17,11 @@ class Config:
     VK_ADS_SETTINGS_ACCESS_URL = f'{VK_ADS_SETTINGS_URL}/access'
     VK_ADS_SETTINGS_LOGS_URL = f'{VK_ADS_SETTINGS_URL}/logs'
 
+    USER_DATA_DIR = '/Users/smail/Library/Application Support/Google/Chrome'
+    USER_PROFILE_DIR = 'Profile 1'
+    VK_ID_LOGGED_IN = True
+    MAIL_RU_LOGGED_IN = True
+
     CLICK_RETRIES = 3
 
 
@@ -62,6 +67,12 @@ def driver(config):
     selenoid = config['selenoid']
     vnc = config['vnc']
     options = Options()
+    if Config.USER_DATA_DIR is not None:
+        # Используем готовый профиль Chrome, где уже выполнена авторизация
+        options.add_argument(rf'--user-data-dir={Config.USER_DATA_DIR}')
+        options.add_argument(f'--profile-directory={Config.USER_PROFILE_DIR}')
+        Config.VK_ID_LOGGED_IN = True
+        Config.MAIL_RU_LOGGED_IN = True
     if config['headless']:
         options.add_argument('--headless')
     if selenoid:
