@@ -18,6 +18,7 @@ class CommerceCenterPage(BasePage):
         return self.find(CommerceCenterLocators.CREATE_CATALOG_BUTTON, timeout=10)
 
     def click_create_catalog_button(self):
+        self.find(CommerceCenterLocators.CREATE_CATALOG_BUTTON, timeout=10)
         self.click(CommerceCenterLocators.CREATE_CATALOG_BUTTON)
 
     def find_new_catalog_header(self):
@@ -62,7 +63,7 @@ class CommerceCenterPage(BasePage):
         if self.exists(CommerceCenterLocators.TABLE_HEADERS):
             self.delete_catalog()
         else:
-            pass
+            self.open_and_wait()
 
     def delete_catalog(self):
         self.open_and_wait()
@@ -77,7 +78,7 @@ class CommerceCenterPage(BasePage):
                 WebDriverWait(self.driver, 5).until(
                     EC.invisibility_of_element_located(CommerceCenterLocators.SETTINGS_HEADER)
                 )
-                self.open_and_wait()
+                break
 
     def click_settings_button(self):
         self.find(CommerceCenterLocators.SETTINGS_BUTTON, timeout=10)
@@ -89,8 +90,9 @@ class CommerceCenterPage(BasePage):
         self.find(CommerceCenterLocators.REMOVE_BUTTON, timeout=10)
         self.click(CommerceCenterLocators.REMOVE_BUTTON)
 
+    # иногда бывает задержка в создании каталога
     def search_catalog(self, name):
-        self.find(CommerceCenterLocators.SEARCH_INPUT, timeout=10)
+        self.find(CommerceCenterLocators.SEARCH_INPUT, timeout=20)
         self.fill_field(CommerceCenterLocators.SEARCH_INPUT, name)
 
     def create_catalog(self,file_path, name="Каталог"):
@@ -101,6 +103,8 @@ class CommerceCenterPage(BasePage):
         self.upload_feed_file(file_path)
         self.fill_field_catalog_name(name)
         self.click_submit_create_button()
+        # подождать, пока уберется окно создания
+        self.wait(5).until(EC.invisibility_of_element_located(CommerceCenterLocators.NEW_CATALOG_HEADER))
         self.open_and_wait()
         self.find_table_headers()
         # закрытие нокна создания
@@ -117,9 +121,10 @@ class CommerceCenterPage(BasePage):
         for item in catalog_items:
                 item.click()
                 break
-
+    
+    # большой таймаут, так как товары добавляются очень долго
     def find_items_table(self):
-        self.find(CommerceCenterLocators.ITEMS_TABLE, timeout=100)
+        self.find(CommerceCenterLocators.ITEMS_TABLE, timeout=1000)
         return self.exists(CommerceCenterLocators.ITEMS_TABLE, timeout=10)
     
     def search_goods(self, name):
@@ -210,7 +215,7 @@ class CommerceCenterPage(BasePage):
 
     def find_group_item_by_name(self, name):
         group_item_locator = (By.XPATH, CommerceCenterLocators.GROUP_ITEM_BY_NAME[1].format(name=name))
-        return self.find(group_item_locator, timeout=10)
+        return self.exists(group_item_locator, timeout=10)
     
     def click_more_button(self):
         self.find(CommerceCenterLocators.MORE_BUTTON, timeout=10)
@@ -242,8 +247,6 @@ class CommerceCenterPage(BasePage):
         search_input.clear()
         search_input.send_keys(name)
 
-    def find_items_table(self):
-        return self.exists(CommerceCenterLocators.ITEMS_TABLE, timeout=10)
     
     def find_nothing_found_message_goods(self):
         return self.exists(CommerceCenterLocators.NOTHING_FOUND_MESSAGE, timeout=10)

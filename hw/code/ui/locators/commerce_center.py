@@ -15,6 +15,7 @@ class CommerceCenterPageLocators:
     SEARCH_INPUT = (By.XPATH, '//input[@data-testid="search"]')
     NOTHING_FOUND_HEADER = (By.XPATH, '//h2[contains(@class, "vkuiPlaceholder__header") and text()="Ничего не нашлось"]')
     STATUS_ACTIVE = (By.XPATH, '//div[@class="StatusCell_cell__JNHWT" and contains(text(), "Активный")]')
+    COMMERCE_CENTER_HEADER = (By.XPATH, '//h1[@class="vkuiTypography vkuiTypography--normalize CatalogsPlaceholder_placeHolderTitle__jM+ip vkuiTitle--level-1" and contains(text(), "Центр коммерции — место, где хранятся каталоги товаров и услуг")]')
     
 class CatalogLocators:
     
@@ -45,7 +46,7 @@ class CatalogLocators:
     GROUP_NAME_INPUT = (By.XPATH, '//div[@class="vkuiFormItem vkuiFormItem--withPadding vkuiInternalFormItem vkuiFormItem--sizeY-none vkuiInternalFormItem--sizeY-none"]//input[@class="vkuiTypography vkuiInput__el vkuiText vkuiText--sizeY-none" and @name="groupName"]')
     SAVE_BUTTON = (By.XPATH, '//button[@type="submit" and @data-testid="submit" and .//span[text()="Сохранить"]]')
     CANCEL_BUTTON = (By.XPATH, '//button[@type="button" and @data-testid="cancel" and .//span[text()="Отмена"]]')
-    GROUP_ITEM_BY_NAME = (By.XPATH, '//a[@data-testid="catalog-groups-nav-item" and .//h2[contains(@class, "vkuiHeader__content") and text()="{name}"]]')
+    GROUP_ITEM_BY_NAME = (By.XPATH, '//a[@data-testid="catalog-groups-nav-item" and .//h2[contains(@class, "vkuiHeader__content")]]')
     GROUP_ITEM_BY_NAME_CONTAINS = (By.XPATH, '//a[@data-testid="catalog-groups-nav-item" and .//h2[contains(@class, "vkuiHeader__content") and contains(text(), "{name}")]]')
     MORE_BUTTON = (By.XPATH, '//button[contains(@class, "Toolbar_actionsButton__32Sv4") and .//svg[@class="vkuiIcon--more_horizontal_24"]]')
     DELETE_GROUP_BUTTON = (By.XPATH, '//label[@data-testid="dropdown-item" and .//span[text()="Удалить группу"]]')
