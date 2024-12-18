@@ -67,7 +67,7 @@ class GroupLocators:
     SET_TIME_BUTTON = (By.XPATH, '//span[contains(@class, "vkuiSimpleCell__children") and contains(text(), "Настроить время показа")]')
     MY_TIME_BUTTON = (By.XPATH, '//button[contains(@class, "Preset_button__+hw+w") and .//span[text()="Моё время"]]')
     # длинные локаторы, так как нудно учитывать конкретный слот в большом массиве
-    TIME_SLOT_ACTIVE = (By.XPATH, '//div[@data-id="0" and @data-day-id="0" and @data-hour-id="0" and contains(@class, "Cell_cell__9eaRF") and contains(@class, "Cell_cell_checked__jp-QY")]')
+    TIME_SLOT_ACTIVE = (By.XPATH, '//div[@data-id="0" and @data-day-id="0" and @data-hour-id="0" and contains(@class, "Cell_cell_checked__jp-QY")]')
     TIME_SLOT_NOT_ACTIVE = (By.XPATH, '//div[@data-id="0" and @data-day-id="0" and @data-hour-id="0" and contains(@class, "Cell_cell__9eaRF") and not(contains(@class, "Cell_cell_checked__jp-QY"))]')
     ADD_GROUP_BUTTON = (By.XPATH, '//button[contains(@class, "AddGroupButton_addButton__qM3RA") and .//span[text()="Добавить ещё группу"]]')
     REGION_INPUT = (By.XPATH, '//input[@placeholder="Страна, регион или город" and contains(@class, "vkuiSearch__nativeInput")]')
@@ -82,6 +82,7 @@ class GroupLocators:
 
 class AdLocators:
     ADD_AD_BUTTON = (By.XPATH, '//button[contains(@class, "AdForm_addButton__lw-oq") and .//span[text()="Добавить ещё объявление"]]')
+    ADD_ITEMS = (By.XPATH, '//div[@class="MenuItem_cellWrapper__dSQle" and contains(@title, "Объявление")]')
 
 
 class CampaignLocators(CampaignMenuLocators, CampaignSettingsLocators, GroupLocators, AdLocators):

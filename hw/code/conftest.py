@@ -22,9 +22,8 @@ class Config:
     VK_ADS_LEADFORMS_URL = f'{VK_ADS_CABINET_URL}/leadads/leadforms'
     VK_ADS_SURVEYS_URL = f'{VK_ADS_CABINET_URL}/leadads/surveys'
 
-    USER_DATA_DIR = r'C:\Users\smail\AppData\Local\Google\Chrome\User Data'
-    # USER_DATA_DIR = None
-    USER_PROFILE_DIR = 'Profile 1'
+    USER_DATA_DIR = os.getenv('USER_PROFILE_DIR', None)
+    USER_PROFILE_DIR = os.getenv('PROFILE_NAME', None)
     VK_ID_LOGGED_IN = USER_DATA_DIR is not None
     MAIL_RU_LOGGED_IN = USER_DATA_DIR is not None
     VK_ADS_CAMPAIGN_URL = f'{VK_ADS_CABINET_URL}/dashboard'

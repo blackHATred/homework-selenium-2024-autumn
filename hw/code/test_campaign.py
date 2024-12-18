@@ -9,15 +9,11 @@ class TestCampaignMenu(BaseCase):
 
     def test_first_campaign(self, campaign_page):
         campaign_page.open_and_wait()
-        #if campaign_page.find(CampaignLocators.MODAL_CLOSE_BUTTON):
-        #    campaign_page.click(CampaignLocators.MODAL_CLOSE_BUTTON)
         assert campaign_page.find_create_campaign_button()
     
     
     def test_create_campaign_button(self, campaign_page):
         campaign_page.open_and_wait()
-        #if campaign_page.find(CampaignLocators.MODAL_CLOSE_BUTTON):
-        #    campaign_page.click(CampaignLocators.MODAL_CLOSE_BUTTON)
         campaign_page.create_campaign()
         assert campaign_page.is_opened(url=Config.VK_ADS_CAMPAIGN_CREATE_URL)
 

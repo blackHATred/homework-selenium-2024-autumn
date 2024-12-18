@@ -311,7 +311,7 @@ class CampaignPage(BasePage):
         self.click(CampaignLocators.CONTINUE_BUTTON)
 
     def get_ad_count(self):
-        ads = self.find_elements((By.XPATH, '//div[@class="MenuItem_cellWrapper__dSQle" and contains(@title, "Объявление")]'))
+        ads = self.find_elements(CampaignLocators.ADD_ITEMS)
         # массив в боковой панели
         return len(ads)
 
