@@ -11,6 +11,7 @@ from hw.code.ui.pages.register_page import RegisterPage
 from hw.code.ui.pages.settings_page import SettingsPage, NotificationSettingsPage, AccessSettingsPage, LogsSettingsPage
 from hw.code.ui.pages.surveys_page import SurveysPage
 from hw.code.ui.pages.campaign_page import CampaignPage
+from hw.code.ui.pages.commerce_center_page import CommerceCenterPage
 
 
 @pytest.fixture(scope='session')
@@ -119,10 +120,22 @@ def register_page(driver, authorized_user, credentials):
 def campaign_page_with_deleted_campaign(driver, campaign_page):
     driver.get(Config.VK_ADS_CAMPAIGN_URL)
     # удалим кампанию, если она есть
-    campaign_page.delete_campaign()
+    campaign_page.delete_campaign_if_exists()
     return CampaignPage(driver)
 
 @pytest.fixture
 def campaign_page(driver, authorized_user):
     driver.get(CampaignPage.url)
     return CampaignPage(driver)
+
+@pytest.fixture
+def commerce_center(driver, commerce_center_page):
+    driver.get(Config.VK_ADS_COMMERCE_CENTER_URL)
+    # удалим кампанию, если она есть
+    commerce_center_page.delete_catalog_if_exists()
+    return CommerceCenterPage(driver)
+
+@pytest.fixture
+def commerce_center_page(driver, authorized_user):
+    driver.get(CommerceCenterPage.url)
+    return CommerceCenterPage(driver)

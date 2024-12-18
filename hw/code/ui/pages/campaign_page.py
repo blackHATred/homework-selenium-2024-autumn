@@ -1,3 +1,5 @@
+import locale
+import time
 from hw.code.conftest import Config
 from hw.code.ui.locators.campaign import CampaignLocators
 from hw.code.ui.pages.base_page import BasePage
@@ -12,19 +14,77 @@ class CampaignPage(BasePage):
     url = Config.VK_ADS_CAMPAIGN_URL
 
     def click_create_campaign_button(self):
+        self.find(CampaignLocators.CREATE_CAMPAIGN_BUTTON, timeout=10)
         self.click(CampaignLocators.CREATE_CAMPAIGN_BUTTON)
+
+    def find_create_campaign_button(self):
+        return self.find(CampaignLocators.CREATE_CAMPAIGN_BUTTON, timeout=10)
 
     def create_campaign(self):
         #self.click(CampaignLocators.MODAL_CLOSE_BUTTON)
         self.click(CampaignLocators.CREATE_CAMPAIGN_BUTTON)
 
+    def fill_field_campaign_name(self, name):
+        #self.wait(10).until(EC.presence_of_element_located(CampaignLocators.CAMPAIGN_NAME_INPUT))
+        self.find(CampaignLocators.SEARCH_CAMPAIGN_INPUT, timeout=10)
+        self.fill_field(CampaignLocators.SEARCH_CAMPAIGN_INPUT, name)
+
+    def find_draft_rows(self):
+        return self.exists(CampaignLocators.DRAFT_ROWS, timeout=10)
+
+    def click_main_checkbox(self):
+        self.click(CampaignLocators.MAIN_CHECKBOX)
+
+    def find_delete_button_on_main_page(self):
+        return self.find(CampaignLocators.DELETE_BUTTON, timeout=10)
+    
+    def click_delete_button_on_main_page(self):
+        self.click(CampaignLocators.DELETE_BUTTON)
+
+    def find_confirm_button_on_main_page(self):
+        return self.exists(CampaignLocators.CONFIRM_DELETE_BUTTON, timeout=10)
+
+    def click_cancel_button(self):
+        self.click(CampaignLocators.CANCEL_BUTTON)
+        self.wait(10).until(EC.invisibility_of_element_located(CampaignLocators.CONFIRM_DELETE_BUTTON))
+
+    def find_date_picker_button(self):
+        return self.find(CampaignLocators.DATE_PICKER_BUTTON, timeout=10)
+
+    def find_date_range_button(self):
+        return self.exists(CampaignLocators.APPLY_CALENDAR_BUTTON)
+
+    def find_today_button(self):
+        return self.exists(CampaignLocators.TODAY_BUTTON, timeout=10)
+    
+    def click_today_button(self):
+        self.click(CampaignLocators.TODAY_BUTTON)
+    
+    def click_calendar_cancel_button(self):
+        self.click(CampaignLocators.CANCEL_CALENDAR_BUTTON)
+
+    def find_campaign_sidebar_item(self):
+        return self.find(CampaignLocators.CAMPAIGN_SIDEBAR_ITEM, timeout=10)
+    
+    def delete_campaign_if_exists(self):
+        self.open_and_wait()
+        if self.exists(CampaignLocators.CAMPAIGN_DROPDOWN_BUTTON):
+            self.delete_campaign()  
+        else:
+            pass
+
+
     def delete_campaign(self):
         self.open_and_wait()
         self.go_to_draft()
         # выделение кампаний
-        self.click(CampaignLocators.MAIN_CHECKBOX)
-        self.click(CampaignLocators.DELETE_BUTTON)
-        self.click(CampaignLocators.CONFIRM_DELETE_BUTTON, timeout=10)
+        if self.exists(CampaignLocators.MAIN_CHECKBOX):
+            checkbox = self.find(CampaignLocators.MAIN_CHECKBOX, timeout=10)
+            checkbox.click()
+            self.click(CampaignLocators.DELETE_BUTTON)
+            del_button = self.find(CampaignLocators.CONFIRM_DELETE_BUTTON, timeout=10)
+            del_button.click()
+            self.wait(10).until(EC.invisibility_of_element_located(CampaignLocators.DRAFT_ROWS))
 
 
     def create_draft_campaign(self):
@@ -35,29 +95,46 @@ class CampaignPage(BasePage):
         self.find(CampaignLocators.MAIN_MENU_BUTTON)
         self.open_and_wait()
         self.click(CampaignLocators.CAMPAIGN_DROPDOWN_BUTTON)
+        # ожидаем, пока кнопка будет видна
+        WebDriverWait(self.driver, 10).until(EC.visibility_of_element_located(CampaignLocators.DRAFTS_BUTTON))
         self.click(CampaignLocators.DRAFTS_BUTTON)
 
-    def compare_dates(self):
-        start_date = self.find(CampaignLocators.START_DATE_INPUT).get_attribute("value")
-        end_date = self.find(CampaignLocators.END_DATE_INPUT).get_attribute("value")
-        return start_date == end_date
+    def click_date_picker_button(self):
+        date_picker_button = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located(CampaignLocators.DATE_PICKER_BUTTON)
+        )
+        date_picker_button.click()
 
+    def compare_dates(self):
+        start_date_input = self.find(CampaignLocators.START_DATE_INPUT, timeout=10)
+        end_date_input = self.find(CampaignLocators.END_DATE_INPUT, timeout=10)
+
+        start_date_value = start_date_input.get_attribute('value')
+        end_date_value = end_date_input.get_attribute('value')
+
+        return start_date_value == end_date_value
+    
+    def click_apply_calendar_button(self):
+        self.click(CampaignLocators.APPLY_CALENDAR_BUTTON)
+    
+    def compare_saved_date(self):
+        date_picker_button = self.find(CampaignLocators.DATE_PICKER_BUTTON, timeout=10)
+        date_text_element = date_picker_button.find_element(*CampaignLocators.DATE_TEXT)
+        date_text = date_text_element.text
+
+        date_parts = date_text.split()
+        day = date_parts[0]
+
+        today = datetime.today()
+        today_day = today.day
+
+        # Сравнение даты с сегодняшним числом
+        return day == str(today_day)
+    
     def get_draft_campaign_count(self):
         drafts = self.find_elements(CampaignLocators.DRAFT_ROWS)
+        
         return len(drafts)
-    
-    def compare_dates(self):
-        start_date = self.find(CampaignLocators.START_DATE_INPUT).get_attribute("value")
-        date_range_text = self.find(CampaignLocators.DATE_RANGE_TEXT).text
-
-        # Преобразуем дату из поля ввода в формат datetime
-        start_date_obj = datetime.strptime(start_date, "%Y-%m-%d")
-
-        # Извлекаем начальную дату из текста диапазона дат
-        range_start_date_str = date_range_text.split(' — ')[0]
-        range_start_date_obj = datetime.strptime(range_start_date_str, "%d %b %Y")
-
-        return start_date_obj == range_start_date_obj
 
     def set_campaign_name(self, new_name):
         self.click(CampaignLocators.CAMPAIGN_NAME_INPUT)
@@ -66,37 +143,77 @@ class CampaignPage(BasePage):
         input_element.send_keys(new_name)
         input_element.send_keys(Keys.ENTER)
 
-    def verify_campaign_name_in_sidebar(self, campaign_name):
-        locator = (By.XPATH, f'//div[@class="MenuItem_cellWrapper__dSQle" and contains(@title, "{campaign_name}")]')
-        return self.find(locator)
-    
-    def click_tab_conversion(self, option):
+    def click_tab_conversion(self):
         self.click(CampaignLocators.TAB_CONVERSION)
-        self.click(option)
+        self.click(CampaignLocators.SITE_CONVERSIONS_OPTION)
 
     def click_tab_branding(self):
         self.click(CampaignLocators.TAB_BRANDING)
 
-    def is_tab_selected(self, tab_locator):
-        return self.find(tab_locator).get_attribute("aria-selected") == "true"
+    def is_tab_selected_tab_conversion(self):
+        return self.find(CampaignLocators.TAB_CONVERSION).get_attribute("aria-selected") == "true"
+    
+    def is_tab_selected_tab_branding(self):
+        return self.find(CampaignLocators.TAB_BRANDING).get_attribute("aria-selected") == "true"
+    
+    def click_site_conversions_option(self):
+        self.click(CampaignLocators.SITE_CONVERSIONS_OPTION)
+
+    def fill_field_budget(self, budget):
+        self.wait(10).until(EC.presence_of_element_located(CampaignLocators.BUDGET_INPUT))
+        self.fill_field_and_save(CampaignLocators.BUDGET_INPUT, budget)
+
+    def fill_field_site_url(self, url):
+        self.wait(10).until(EC.presence_of_element_located(CampaignLocators.SITE_URL_INPUT))
+        self.fill_field_and_save(CampaignLocators.SITE_URL_INPUT, url)
     
     def fill_field_and_save(self, locator, value):
+        self.wait(10).until(EC.presence_of_element_located(locator))
         self.fill_field(locator, value)
         self.find(locator).send_keys(Keys.ENTER)
+
+    def click_continue_button(self):
+        self.click(CampaignLocators.CONTINUE_BUTTON)
+
+    def find_errors(self):
+        return self.find(CampaignLocators.ERROR_BUTTON, timeout=10)
+    
+    def find_group_sidebar_item(self):
+        return self.find(CampaignLocators.GROUP_SIDEBAR_ITEM, timeout=10)
+    
+    def click_group_sidebar_item(self):
+        self.click(CampaignLocators.GROUP_SIDEBAR_ITEM)
+
+    def exist_site_url_error(self):
+        return self.exists(CampaignLocators.SITE_URL_ERROR)
+    
+    def exist_budget_error(self):
+        return self.exists(CampaignLocators.BUDGET_INPUT_ERROR)
+    
+    def find_budget_input(self):
+        return self.find(CampaignLocators.BUDGET_INPUT, timeout=10)
+    
+    def click_calendar_button(self):
+        self.click(CampaignLocators.SHOW_CALENDAR_BUTTON)
+
+    def find_calendar(self):
+        return self.find(CampaignLocators.CALENDAR, timeout=10)
+    
+    def choose_banner_ad_option(self):
+        self.click(CampaignLocators.BANNER_AD_OPTION)
+        self.click(CampaignLocators.RADIO_OPTION_SITE)
+
+    def find_advertised_site_label(self):
+        return self.find(CampaignLocators.ADVERTISED_SITE_LABEL, timeout=10)
+
+    def find_shows_per_user_label(self):
+        return self.find(CampaignLocators.SHOWS_PER_USER_LABEL, timeout=10)
 
     # Вводим текст в поле и возвращаем обрезанный текст
     def enter_selling_proposition(self, text):
         self.clear_and_send_keys(CampaignLocators.SELLING_PROPOSITION_TEXTAREA, text)
         entered_text = self.find(CampaignLocators.SELLING_PROPOSITION_TEXTAREA).get_attribute("value")
         return entered_text
-    
-    def click_budget_optimization_checkbox(self):
-        self.click(CampaignLocators.BUDGET_OPTIMIZATION_CHECKBOX)
-
-    def select_budget_option(self, option_text):
-        self.click(CampaignLocators.BUDGET_SELECT)
-        option_locator = (By.XPATH, f'//span[contains(@class, "vkuiCustomSelectInput__title") and text()="{option_text}"]')
-        self.click(option_locator)
 
     def click_next_month_button(self):
         self.click(CampaignLocators.NEXT_MONTH_BUTTON)
@@ -114,7 +231,7 @@ class CampaignPage(BasePage):
 
     def create_group(self):
         self.create_campaign()
-        self.click_tab_conversion(CampaignLocators.SITE_CONVERSIONS_OPTION)
+        self.click_tab_conversion()
         self.fill_field_and_save(CampaignLocators.SITE_URL_INPUT, 'dd.dd')
         self.fill_field_and_save(CampaignLocators.BUDGET_INPUT, '100')
         self.click(CampaignLocators.CONTINUE_BUTTON)
@@ -122,17 +239,75 @@ class CampaignPage(BasePage):
     def get_group_count(self):
         groups = self.find_elements(CampaignLocators.GROUP_SIDEBAR_ITEM)
         return len(groups)
-        
-    def select_age_option(self, value):
-        option_locator = (By.XPATH, CampaignLocators.AGE_OPTION.format(value))
-        self.click(option_locator)
+
+    def find_set_dates_button(self):
+        return self.find(CampaignLocators.SET_DATES_BUTTON, timeout=10) 
+    
+    def click_set_dates_button(self):
+        self.click(CampaignLocators.SET_DATES_BUTTON)
+
+    def find_set_time_button(self):
+        return self.find(CampaignLocators.SET_TIME_BUTTON, timeout=10)
+    
+    def click_set_time_button(self):
+        self.click(CampaignLocators.SET_TIME_BUTTON)
+
+    def click_time_active_slot(self):
+        self.click(CampaignLocators.TIME_SLOT_ACTIVE)
+
+    def click_time_not_active_slot(self):
+        self.click(CampaignLocators.TIME_SLOT_NOT_ACTIVE)
+
+    def find_time_slot_not_active(self):
+        return self.find(CampaignLocators.TIME_SLOT_NOT_ACTIVE, timeout=10)
+    
+    def find_time_slot_active(self):
+        return self.find(CampaignLocators.TIME_SLOT_ACTIVE, timeout=10)
+    
+    def click_add_group_button(self):
+        self.click(CampaignLocators.ADD_GROUP_BUTTON)
+
+    def find_region_input(self):
+        return self.exists(CampaignLocators.REGION_INPUT, timeout=10)
+
+    def fill_region_input(self, region):
+        self.wait(10).until(EC.presence_of_element_located(CampaignLocators.REGION_INPUT))
+        self.fill_field(CampaignLocators.REGION_INPUT, region)
+
+    def find_search_tooltip_short_request(self):
+        self.wait(10).until(EC.presence_of_element_located(CampaignLocators.SEARCH_TOOLTIP_SHORT_REQUEST))
+        return self.find(CampaignLocators.SEARCH_TOOLTIP_SHORT_REQUEST, timeout=10)
+
+    def find_search_tooltip_no_results(self):
+        return self.find(CampaignLocators.SEARCH_TOOLTIP_NO_RESULTS, timeout=10)
+    
+    def click_yaroslavl_option(self):
+        self.click(CampaignLocators.YAROSLAVL_OPTION)
+
+    def find_yaroslavl_label(self):
+        return self.find(CampaignLocators.YAROSLAVL_LABEL, timeout=10)
+    
+    def exists_yaroslavl_label(self):
+        return self.exists(CampaignLocators.YAROSLAVL_LABEL)
+    
+    def click_yaroslavl_remove_button(self):
+        self.click(CampaignLocators.YAROSLAVL_REMOVE_BUTTON)
+
+    def click_demography_section(self):
+        return self.click(CampaignLocators.DEMOGRAPHY_SECTION)
+    
+    def find_age_warning_banner(self):
+        return self.find(CampaignLocators.AGE_WARNING_BANNER, timeout=10)
     
     # Для объявления:
 
+    def click_add_ad_button(self):
+        self.click(CampaignLocators.ADD_AD_BUTTON)
+
     def create_ad(self):
         self.create_group()
-        self.fill_field(CampaignLocators.REGION_INPUT, 'Ярославль')
-        self.click(CampaignLocators.YAROSLAVL_OPTION)
+        self.fill_region_input('Ярославль')
+        self.click_yaroslavl_option()
         self.click(CampaignLocators.CONTINUE_BUTTON)
 
     def get_ad_count(self):

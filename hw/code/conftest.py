@@ -29,6 +29,7 @@ class Config:
     MAIL_RU_LOGGED_IN = USER_DATA_DIR is not None
     VK_ADS_CAMPAIGN_URL = f'{VK_ADS_CABINET_URL}/dashboard'
     VK_ADS_CAMPAIGN_CREATE_URL = f'{VK_ADS_CABINET_URL}/new_create/ad_plan'
+    VK_ADS_COMMERCE_CENTER_URL = f'{VK_ADS_CABINET_URL}/ecomm/catalogs'
 
     CLICK_RETRIES = 3
     FILL_RETRIES = 3
@@ -111,6 +112,5 @@ def driver(config):
         upload_throughput=500 * 1024,
     )
     driver.maximize_window()
-    driver.get(url)
     yield driver
     driver.quit()
