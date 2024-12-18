@@ -17,6 +17,7 @@ class Config:
     VK_ADS_SETTINGS_LOGS_URL = f'{VK_ADS_SETTINGS_URL}/logs'
     VK_ADS_CAMPAIGN_URL = f'{VK_ADS_CABINET_URL}/dashboard'
     VK_ADS_CAMPAIGN_CREATE_URL = f'{VK_ADS_CABINET_URL}/new_create/ad_plan'
+    VK_ADS_COMMERCE_CENTER_URL = f'{VK_ADS_CABINET_URL}/ecomm/catalogs'
 
     CLICK_RETRIES = 3
 
@@ -65,12 +66,12 @@ def driver():
     # options.add_argument('--blink-settings=imagesEnabled=false')
     driver = webdriver.Chrome(options=options)
     # Замедляем скорость интернета, чтобы не ловить ошибки из-за ограничений на кол-во запросов
-    driver.set_network_conditions(
-        offline=False,
-        latency=5,
-        download_throughput=500 * 1024,
-        upload_throughput=500 * 1024,
-    )
-    driver.maximize_window()
+    # driver.set_network_conditions(
+    #     offline=False,
+    #     latency=5,
+    #     download_throughput=500 * 1024,
+    #     upload_throughput=500 * 1024,
+    # )
+    # driver.maximize_window()
     yield driver
     driver.quit()
