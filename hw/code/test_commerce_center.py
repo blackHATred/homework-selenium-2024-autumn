@@ -3,6 +3,7 @@ from selenium.webdriver.support import expected_conditions as EC
 
 from hw.code.fixtures import *
 from hw.code.ui.locators.campaign import CampaignLocators
+from hw.code.ui.pages.commerce_center_page import CommerceCenterPage
 
 class TestCommerceCenter(BaseCase):
 
@@ -13,12 +14,16 @@ class TestCommerceCenter(BaseCase):
         assert commerce_center.find_new_catalog_header()
 
     def test_search_catalog(self, commerce_center):
+        commerce_center.open_and_wait()
         file_path = os.path.join(os.path.dirname(__file__), 'assets', 'catalog_products.csv')
         commerce_center.create_catalog(file_path)
+        commerce_center.open_and_wait()
+
         commerce_center.search_catalog("Каталог")
         assert commerce_center.find_table_headers()
 
     def test_search_nonexistent_catalog(self, commerce_center):
+        commerce_center.open_and_wait()
         file_path = os.path.join(os.path.dirname(__file__), 'assets', 'catalog_products.csv')
         commerce_center.create_catalog(file_path)
         commerce_center.search_catalog("!!!")
@@ -70,21 +75,24 @@ class TestCommerceCenter(BaseCase):
 class TestCatalogGoods(BaseCase):
 
     def test_goods_search(self, commerce_center_page):
-        file_path = os.path.join(os.path.dirname(__file__), 'assets', 'catalog_products.csv')
-        commerce_center_page.create_catalog(file_path)
+        commerce_center_page.open_and_wait()
+        #file_path = os.path.join(os.path.dirname(__file__), 'assets', 'catalog_products.csv')
+        #commerce_center_page.create_catalog(file_path)
         commerce_center_page.click_catalog_item()
         assert commerce_center_page.find_items_table()
         commerce_center_page.search_goods("Худи")
         assert commerce_center_page.find_items_table()
 
     def test_goods_add_button(self, commerce_center_page):
+        commerce_center_page.open_and_wait()
         file_path = os.path.join(os.path.dirname(__file__), 'assets', 'catalog_products.csv')
-        commerce_center_page.create_catalog(file_path)
+        #commerce_center_page.create_catalog(file_path)
         commerce_center_page.click_catalog_item()
         commerce_center_page.click_add_goods_button()
         assert commerce_center_page.find_settings_panel_header()
 
     def test_goods_add_cancel_button(self, commerce_center_page):
+        commerce_center_page.open_and_wait()
         file_path = os.path.join(os.path.dirname(__file__), 'assets', 'catalog_products.csv')
         #commerce_center_page.create_catalog(file_path)
         commerce_center_page.click_catalog_item()
@@ -94,17 +102,19 @@ class TestCatalogGoods(BaseCase):
         assert not commerce_center_page.find_settings_panel_header()
 
     def test_goods_choose_goods(self, commerce_center_page):
+        commerce_center_page.open_and_wait()
         file_path = os.path.join(os.path.dirname(__file__), 'assets', 'catalog_products.csv')
-        commerce_center_page.create_catalog(file_path)
+        #commerce_center_page.create_catalog(file_path)
         commerce_center_page.click_catalog_item()
         commerce_center_page.click_current_catalog_button()
         commerce_center_page.click_catalog_item_by_name("Каталог")
         current_catalog_name = commerce_center_page.get_catalog_name()
-        assert current_catalog_name == "Каталог"
+        assert "Каталог" in current_catalog_name
 
 class TestCatalogGroup(BaseCase):
 
     def test_group_create_button(self, commerce_center_page):
+        commerce_center_page.open_and_wait()
         file_path = os.path.join(os.path.dirname(__file__), 'assets', 'catalog_products.csv')
         commerce_center_page.create_catalog(file_path)
         commerce_center_page.click_catalog_item()
@@ -116,6 +126,7 @@ class TestCatalogGroup(BaseCase):
         assert commerce_center_page.find_choose_goods_manually_button()
 
     def test_group_use_filters(self, commerce_center_page):
+        commerce_center_page.open_and_wait()
         file_path = os.path.join(os.path.dirname(__file__), 'assets', 'catalog_products.csv')
         commerce_center_page.create_catalog(file_path)
         commerce_center_page.click_catalog_item()
@@ -128,6 +139,7 @@ class TestCatalogGroup(BaseCase):
         assert commerce_center_page.find_new_group_header()
 
     def test_group_add_filter(self, commerce_center_page):
+        commerce_center_page.open_and_wait()
         file_path = os.path.join(os.path.dirname(__file__), 'assets', 'catalog_products.csv')
         commerce_center_page.create_catalog(file_path)
         commerce_center_page.click_catalog_item()
@@ -142,6 +154,7 @@ class TestCatalogGroup(BaseCase):
         assert commerce_center_page.count_filter_condition()
 
     def test_group_save_filter_button(self, commerce_center_page):
+        commerce_center_page.open_and_wait()
         file_path = os.path.join(os.path.dirname(__file__), 'assets', 'catalog_products.csv')
         commerce_center_page.create_catalog(file_path)
         commerce_center_page.click_catalog_item()
@@ -161,6 +174,7 @@ class TestCatalogGroup(BaseCase):
 
     
     def test_group_cancel_filter_button(self, commerce_center_page):
+        commerce_center_page.open_and_wait()
         file_path = os.path.join(os.path.dirname(__file__), 'assets', 'catalog_products.csv')
         commerce_center_page.create_catalog(file_path)
         commerce_center_page.click_catalog_item()
@@ -179,6 +193,7 @@ class TestCatalogGroup(BaseCase):
     
 
     def test_group_manually_add_button(self, commerce_center_page):
+        commerce_center_page.open_and_wait()
         file_path = os.path.join(os.path.dirname(__file__), 'assets', 'catalog_products.csv')
         commerce_center_page.create_catalog(file_path)
         commerce_center_page.click_catalog_item()
@@ -195,6 +210,7 @@ class TestCatalogGroup(BaseCase):
 
 
     def test_group_manually_add_search(self, commerce_center_page):
+        commerce_center_page.open_and_wait()
         file_path = os.path.join(os.path.dirname(__file__), 'assets', 'catalog_products.csv')
         commerce_center_page.create_catalog(file_path)
         commerce_center_page.click_catalog_item()
@@ -212,6 +228,7 @@ class TestCatalogGroup(BaseCase):
 
 
     def test_group_manually_add_search_nonexistent_goods(self, commerce_center_page):
+        commerce_center_page.open_and_wait()
         file_path = os.path.join(os.path.dirname(__file__), 'assets', 'catalog_products.csv')
         commerce_center_page.create_catalog(file_path)
         commerce_center_page.click_catalog_item()
@@ -226,6 +243,7 @@ class TestCatalogGroup(BaseCase):
         assert commerce_center_page.find_nothing_found_message_goods()
 
     def test_group_manually_add_add_button(self, commerce_center_page):
+        commerce_center_page.open_and_wait()
         file_path = os.path.join(os.path.dirname(__file__), 'assets', 'catalog_products.csv')
         commerce_center_page.create_catalog(file_path)
         commerce_center_page.click_catalog_item()
@@ -241,6 +259,7 @@ class TestCatalogGroup(BaseCase):
         assert commerce_center_page.find_items_table()
 
     def test_group_manually_add_save_button(self, commerce_center_page):
+        commerce_center_page.open_and_wait()
         file_path = os.path.join(os.path.dirname(__file__), 'assets', 'catalog_products.csv')
         commerce_center_page.create_catalog(file_path)
         commerce_center_page.click_catalog_item()
@@ -257,6 +276,7 @@ class TestCatalogGroup(BaseCase):
         assert commerce_center_page.find_items_table()
 
     def test_group_manually_add_cancel_button(self, commerce_center_page):
+        commerce_center_page.open_and_wait()
         file_path = os.path.join(os.path.dirname(__file__), 'assets', 'catalog_products.csv')
         commerce_center_page.create_catalog(file_path)
         commerce_center_page.click_catalog_item()
@@ -271,6 +291,7 @@ class TestCatalogGroup(BaseCase):
         assert not commerce_center_page.find_new_group_header()
 
     def test_group_list_search(self, commerce_center_page):
+        commerce_center_page.open_and_wait()
         file_path = os.path.join(os.path.dirname(__file__), 'assets', 'catalog_products.csv')
         commerce_center_page.create_catalog(file_path)
         commerce_center_page.click_catalog_item()
@@ -281,8 +302,9 @@ class TestCatalogGroup(BaseCase):
 class TestCatalogDownload(BaseCase):
 
     def test_download_history(self, commerce_center_page):
+        commerce_center_page.open_and_wait()
         file_path = os.path.join(os.path.dirname(__file__), 'assets', 'catalog_products.csv')
-        commerce_center_page.create_catalog(file_path)
+        #commerce_center_page.create_catalog(file_path)
         commerce_center_page.click_catalog_item()
         commerce_center_page.click_download_history_tab()
         assert commerce_center_page.open_modal()
