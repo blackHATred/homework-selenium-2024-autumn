@@ -72,7 +72,7 @@ class LeadFormsLocators(BaseLocators):
     ADD_CONTACT_OPTION_BUTTON = (By.XPATH, '//button/span/span[contains(text(), "Добавить контактные данные")]')
     # Этому локатору соответствует несколько элементов, при обработке нужно учитывать порядковый номер поля
     CONTACT_OPTION = (By.XPATH, '//label[contains(@class, "vkuiCheckbox")]')
-    ADD_CONTACT_OPTIONS_AGREE_BUTTON = (By.XPATH, '//div[contains(@class, "ModalManagerPage_footer")]/button/span/span[contains(text(), "Добавить")]')
+    ADD_CONTACT_OPTIONS_AGREE_BUTTON = (By.XPATH, '//button/span/span[text()="Добавить"]')
     PREVIEW_CONTACT_NAME = (By.XPATH, '//*[contains(@class, "vkuiFormField")]/input[@placeholder="Введите имя"]')
     PREVIEW_CONTACT_EMAIL = (By.XPATH, '//*[contains(@class, "vkuiFormField")]/input[@placeholder="Введите email"]')
     PREVIEW_CONTACT_PHONE = (By.XPATH, '//*[contains(@class, "vkuiFormField")]/input[@type="tel"]')
