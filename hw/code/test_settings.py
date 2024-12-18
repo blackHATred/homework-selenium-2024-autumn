@@ -38,12 +38,7 @@ class TestMainTab(BaseCase):
         # Сначала заполним валидными данными
         settings_page.type_valid_data_on_main_tab()
         # Попробуем перезаписать валидный номер на невалидные варианты
-        invalid_cases = [
-            '+7(900)5553535',  # Содержит символы помимо цифр и +
-            '79005553535',     # Начинается не с +
-            '+9999999999',     # Слишком короткий (< 11)
-        ]
-        for case in invalid_cases:
+        for case in settings_page.invalid_phone_cases:
             settings_page.type_phone_number(case)
             settings_page.save_settings()
             assert settings_page.phone_number_error
@@ -59,16 +54,7 @@ class TestMainTab(BaseCase):
         # Сначала заполним валидными данными
         settings_page.type_valid_data_on_main_tab()
         # Попробуем перезаписать валидный email на невалидные варианты
-        invalid_cases = [
-            'testexample.com',    # Ни одного символа @
-            'test@@example.com',  # Больше одного символа @
-            '@example.com',       # До символа @ ни одного символа из множества [a-zA-Z0-9]
-            'test!@example.com',  # До символа @ символы не из множества [a-zA-Z0-9._-]
-            'test@.com',          # Между @ и последней точкой нет ни одного символа из множества [a-zA-Zа-яА-Я0-9]
-            'test@exa!mple.com',  # Между @ и последней точкой есть символы не из [a-zA-Zа-яА-Я0-9._-]
-            'test@example.c',     # После последней точки нет как минимум двух символов из множества [a-zA-Zа-яА-Я]
-        ]
-        for case in invalid_cases:
+        for case in settings_page.invalid_email_cases:
             settings_page.type_email(case)
             settings_page.save_settings()
             assert settings_page.email_error

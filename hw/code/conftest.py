@@ -1,8 +1,12 @@
 import os
 
 import pytest
+from dotenv import load_dotenv
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+
+
+load_dotenv()  # Загрузка переменных окружения из файла .env
 
 
 class Config:
@@ -33,7 +37,7 @@ class Config:
     CLICK_RETRIES = 3
     FILL_RETRIES = 3
 
-    ASSETS_DIR = 'B:/Projects/homework-selenium-2024-autumn/assets'
+    ASSETS_DIR = os.getenv('ASSETS_DIR', 'assets')
 
 
 def pytest_addoption(parser):
