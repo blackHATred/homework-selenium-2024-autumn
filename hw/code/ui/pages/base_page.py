@@ -1,7 +1,7 @@
 import time
 
 from selenium import webdriver
-from selenium.common import TimeoutException, StaleElementReferenceException
+from selenium.common import TimeoutException, StaleElementReferenceException, ElementNotInteractableException
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -76,14 +76,25 @@ class BasePage(object):
             try:
                 webdriver.ActionChains(self.driver).move_to_element(el).click(el).perform()
                 return
-            except StaleElementReferenceException:
+            except ElementNotInteractableException:
                 # Бывает при особенностях работы с DOM, подробнее тут:
                 # https://stackoverflow.com/questions/12967541/how-to-avoid-staleelementreferenceexception-in-selenium
                 pass
         raise CannotClickException(f'Cannot click on {locator}')
 
     def fill_field(self, field_locator: tuple[str, str], value: str):
-        self.find(field_locator).send_keys(value)
+        counter = 0
+        while counter < Config.FILL_RETRIES:
+            counter += 1
+            try:
+                el = self.find(field_locator)
+                webdriver.ActionChains(self.driver).move_to_element(el).perform()
+                el.send_keys(value)
+                return
+            except StaleElementReferenceException or ElementNotInteractableException:
+                # Бывает при особенностях работы с DOM, аналогично click, см. выше
+                pass
+        raise CannotClickException(f'Cannot fill {field_locator}')
 
     def clear_field(self, field_locator: tuple[str, str]):
         self.find(field_locator).clear()

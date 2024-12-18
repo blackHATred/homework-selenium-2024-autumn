@@ -1,3 +1,5 @@
+import os
+
 import pytest
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -6,6 +8,7 @@ from selenium.webdriver.chrome.options import Options
 class Config:
     VK_ID_URL = 'https://id.vk.com'
     VK_ADS_URL = 'https://ads.vk.com'
+    VK_EXPERT_URL = 'https://expert.vk.com'
     VK_ADS_CABINET_URL = f'{VK_ADS_URL}/hq'
     MAIL_RU_URL = 'https://mail.ru'
     VK_ADS_OVERVIEW_URL = f'{VK_ADS_CABINET_URL}/overview'
@@ -16,6 +19,8 @@ class Config:
     VK_ADS_SETTINGS_NOTIFICATIONS_URL = f'{VK_ADS_SETTINGS_URL}/notifications'
     VK_ADS_SETTINGS_ACCESS_URL = f'{VK_ADS_SETTINGS_URL}/access'
     VK_ADS_SETTINGS_LOGS_URL = f'{VK_ADS_SETTINGS_URL}/logs'
+    VK_ADS_LEADFORMS_URL = f'{VK_ADS_CABINET_URL}/leadads/leadforms'
+    VK_ADS_SURVEYS_URL = f'{VK_ADS_CABINET_URL}/leadads/surveys'
 
     USER_DATA_DIR = r'C:\Users\smail\AppData\Local\Google\Chrome\User Data'
     # USER_DATA_DIR = None
@@ -24,6 +29,9 @@ class Config:
     MAIL_RU_LOGGED_IN = USER_DATA_DIR is not None
 
     CLICK_RETRIES = 3
+    FILL_RETRIES = 3
+
+    ASSETS_DIR = 'B:/Projects/homework-selenium-2024-autumn/assets'
 
 
 def pytest_addoption(parser):

@@ -6,8 +6,10 @@ from selenium.webdriver.support.wait import WebDriverWait
 
 from hw.code.conftest import Config
 from hw.code.ui.pages.index_page import IndexPage
+from hw.code.ui.pages.leadform_page import LeadFormsPage
 from hw.code.ui.pages.register_page import RegisterPage
 from hw.code.ui.pages.settings_page import SettingsPage, NotificationSettingsPage, AccessSettingsPage, LogsSettingsPage
+from hw.code.ui.pages.surveys_page import SurveysPage
 
 
 @pytest.fixture(scope='session')
@@ -78,6 +80,16 @@ def access_settings_page(driver, registered_user):
 @pytest.fixture
 def logs_settings_page(driver, registered_user):
     return LogsSettingsPage(driver)
+
+
+@pytest.fixture
+def lead_forms_page(driver, registered_user):
+    return LeadFormsPage(driver)
+
+
+@pytest.fixture
+def surveys_page(driver, registered_user):
+    return SurveysPage(driver)
 
 
 @pytest.fixture
