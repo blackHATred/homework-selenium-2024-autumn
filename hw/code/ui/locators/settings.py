@@ -55,8 +55,8 @@ class AccessListTabLocators:
     USER_ALREADY_ADDED_MESSAGE = (By.XPATH, '//span[@role="alert" and contains(text(), "Кабинет с таким ID уже добавлен")]')
     # Этому локатору соответствует несколько кнопок, при обработке нужно учитывать порядковый номер удаляемого кабинета
     DELETE_INVITE_BUTTON = (By.XPATH, '//*[@data-test="remove-button"]')
-    DELETE_INVITE_CONFIRM_BUTTON = (By.XPATH, '//button[span/span[contains(text(), "Закрыть доступ")]]')
-    DELETE_INVITE_CANCEL_BUTTON = (By.XPATH, '//button[span/span[contains(text(), "Отменить")]]')
+    DELETE_INVITE_CONFIRM_BUTTON = (By.XPATH, '//button//span[contains(text(), "Закрыть доступ")]')
+    DELETE_INVITE_CANCEL_BUTTON = (By.XPATH, '//button//span[contains(text(), "Отменить")]')
     SEARCH_INPUT = (By.XPATH, '//*[@data-testid="search"]')
     EMPTY_SEARCH_MESSAGE = (By.XPATH, '//h2[contains(text(), "Ничего не нашлось")]')
     THESE_USERS_HAVE_ACCESS_LABEL = (By.XPATH, '//span[contains(text(), "Имеют доступ к этому кабинету")]')
@@ -64,22 +64,22 @@ class AccessListTabLocators:
 
 class LogsTabLocators:
     FILTER_BUTTON = (By.XPATH, '//*[@data-testid="filter-button"]')
-    FILTER_CATEGORY_OBJECT_TYPE = (By.XPATH, '//button[span/span/span[contains(text(), "Тип объекта")]]')
-    FILTER_CATEGORY_WHAT_CHANGED = (By.XPATH, '//button[span/span/span[contains(text(), "Что изменилось")]]')
-    FILTER_CATEGORY_AUTHOR = (By.XPATH, '//button[span/span/span[contains(text(), "Автор изменения")]]')
+    FILTER_CATEGORY_OBJECT_TYPE = (By.XPATH, '//button//span[contains(text(), "Тип объекта")]')
+    FILTER_CATEGORY_WHAT_CHANGED = (By.XPATH, '//button//span[contains(text(), "Что изменилось")]')
+    FILTER_CATEGORY_AUTHOR = (By.XPATH, '//button//span[contains(text(), "Автор изменения")]')
     FILTER_OPTIONS_CONTAINER = (By.XPATH, '//*[contains(@class, "FilterSection_optionItems")]')
     # Все доступные опции фильтрации в текущей вкладке
     FILTER_OPTIONS = (By.XPATH, '//*[contains(@class, "FilterSection_filterItem")]/label')
 
-    CHECK_ALL_BUTTON = (By.XPATH, '//button[span/span[contains(text(), "Выбрать все")]]')
-    UNCHECK_ALL_BUTTON = (By.XPATH, '//button[span/span[contains(text(), "Сбросить")]]')
-    APPLY_FILTER_BUTTON = (By.XPATH, '//button[span/span[contains(text(), "Применить")]]')
-    CANCEL_FILTER_BUTTON = (By.XPATH, '//button[span/span[contains(text(), "Отмена")]]')
+    CHECK_ALL_BUTTON = (By.XPATH, '//button//span[contains(text(), "Выбрать все")]')
+    UNCHECK_ALL_BUTTON = (By.XPATH, '//button//span[contains(text(), "Сбросить")]')
+    APPLY_FILTER_BUTTON = (By.XPATH, '//button//span[contains(text(), "Применить")]')
+    CANCEL_FILTER_BUTTON = (By.XPATH, '//button//span[contains(text(), "Отмена")]')
 
     # Этим двум локаторам соответствуют несколько кнопок, при обработке нужно учитывать порядковый номер применяемого фильтра
     APPLIED_FILTER_ELEMENT = (By.XPATH, '//span[contains(@class, "vkuiFootnote")]')
     FILTER_DELETE_BUTTON = (By.XPATH, '//span[contains(@class, "vkuiFootnote")]/button')
-    FILTER_DELETE_ALL_BUTTON = (By.XPATH, '//button[span/span[contains(text(), "Сбросить все")]]')
+    FILTER_DELETE_ALL_BUTTON = (By.XPATH, '//button//span[contains(text(), "Сбросить все")]')
 
     SEARCH_INPUT = (By.XPATH, '//input[@placeholder="Поиск"]')
 

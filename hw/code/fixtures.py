@@ -32,7 +32,7 @@ def index_page(driver):
 def authorized_user(driver, index_page, credentials):
     # Фикстура для авторизованного через VK ID пользователя (необязательно зарегистрированного)
     driver.get(IndexPage.url)
-    WebDriverWait(driver, 5).until(lambda d: d.current_url.rstrip('/') in (
+    WebDriverWait(driver, 10).until(lambda d: d.current_url.rstrip('/') in (
         Config.VK_ADS_OVERVIEW_URL,
         Config.VK_ADS_REGISTER_URL,
         Config.VK_ADS_URL,

@@ -5,12 +5,11 @@ from selenium.webdriver.common.by import By
 # общим базовым классом
 
 class BaseLocators:
-    ARCHIVE_ELEMENT_BUTTON = (By.XPATH, '//button/span[contains(text(), "Архивировать")]')
-    ARCHIVE_ELEMENT_AGREE_BUTTON = (By.XPATH, '//button/span/span[contains(text(), "Архивировать")]')
-    EDIT_ELEMENT_BUTTON = (By.XPATH, '//button/span[contains(text(), "Редактировать")]')
-    # Сложный локатор, но увы, иначе никак
-    RESTORE_ELEMENT_BUTTON = lambda n: (By.XPATH, f'//div[contains(@class, "NameCell_wrapper") and h5[text()="{n}"]]/div/div/button/span[contains(text(), "Восстановить")]')
-    RESTORE_ELEMENT_AGREE_BUTTON = (By.XPATH, '//button/span/span[contains(text(), "Восстановить")]')
+    ARCHIVE_ELEMENT_BUTTON = (By.XPATH, '//button[contains(@class, "Nav_item")]//span[contains(text(), "Архивировать")]')
+    ARCHIVE_ELEMENT_AGREE_BUTTON = (By.XPATH, '//button[contains(@class, "appearance-negative")]//span[contains(text(), "Архивировать")]')
+    EDIT_ELEMENT_BUTTON = (By.XPATH, '//span[contains(text(), "Редактировать")]')
+    RESTORE_ELEMENT_BUTTON = (By.XPATH, f'//button[contains(@class, "Nav_item")]//span[contains(text(), "Восстановить")]')
+    RESTORE_ELEMENT_AGREE_BUTTON = (By.XPATH, '//button[contains(@class, "appearance-positive")]//span[contains(text(), "Восстановить")]')
     SEARCH_INPUT = (By.XPATH, '//input[@placeholder="Поиск"]')
     LIST_ELEMENT = lambda n: (By.XPATH, f'//div[h5[@data-testid="lead_form_name__{n}"]]')
     SELECT_CATEGORY_DROPDOWN = (By.XPATH, '//div[contains(@class, "vkuiCustomSelectInput")]')
@@ -26,13 +25,13 @@ class BaseLocators:
     IMAGE_UPLOADING_SPINNER = (By.XPATH, '//div[contains(@class, "ImageItem_blur")]')
     # Этому локатору соответствует несколько элементов, при обработке нужно учитывать порядковый номер изображения
     UPLOADED_IMAGE_LIST_ELEMENT = (By.XPATH, '//*[contains(@class, "ItemList_item")]')
-    IMAGE_CROPPER_CANCEL = (By.XPATH, '//div[contains(@class, ImageCropper)]/button/span/span[contains(text(), "Отменить")]')
+    IMAGE_CROPPER_CANCEL = (By.XPATH, '//div[contains(@class, ImageCropper)]//span[contains(text(), "Отменить")]')
     CANCEL_CREATION_BUTTON = (By.XPATH, '//*[@data-testid="cancel"]')
     NEXT_STEP_BUTTON = (By.XPATH, '//*[@data-testid="submit"]')
 
 
 class LeadFormsLocators(BaseLocators):
-    START_TUTORIAL_BUTTON = (By.XPATH, '//button/span/span[contains(text(), "Пройти обучение")]')
+    START_TUTORIAL_BUTTON = (By.XPATH, '//span[contains(text(), "Пройти обучение")]')
 
     # Модальное окно обучения
     WATCH_COURSE_OPTION = (By.XPATH, '//div[@class="vkuiSimpleCell__content"]/span[contains(text(), "Смотреть курс на обучающей платформе")]')
@@ -43,16 +42,16 @@ class LeadFormsLocators(BaseLocators):
     # Подсказки
     HINT_1_LABEL = (By.XPATH, '//h5[contains(text(), "Шаг 1. Оформление")]')
     HINT_2_LABEL = (By.XPATH, '//h5[contains(text(), "Предпросмотр")]')
-    HINT_BACK_BUTTON = (By.XPATH, '//button/span/span[contains(text(), "Назад")]')
-    HINT_CONTINUE_BUTTON = (By.XPATH, '//button/span/span[contains(text(), "Далее")]')
+    HINT_BACK_BUTTON = (By.XPATH, '//span[contains(text(), "Назад")]')
+    HINT_CONTINUE_BUTTON = (By.XPATH, '//span[contains(text(), "Далее")]')
     HINT_CLOSE = (By.XPATH, '//div[contains(@class, "RichTooltop_closeBtn")]')
-    CLOSE_HINTS_MODAL_AGREE_BUTTON = (By.XPATH, '//button/span/span[contains(text(), "Прервать")]')
-    CLOSE_HINTS_MODAL_CANCEL_BUTTON = (By.XPATH, '//button/span/span[contains(text(), "Отмена")]')
+    CLOSE_HINTS_MODAL_AGREE_BUTTON = (By.XPATH, '//span[contains(text(), "Прервать")]')
+    CLOSE_HINTS_MODAL_CANCEL_BUTTON = (By.XPATH, '//span[contains(text(), "Отмена")]')
 
     #
     # Создание лид-формы
     #
-    CREATE_LEADFORM_BUTTON = (By.XPATH, '//button/span/span[contains(text(), "Создать лид-форму")]')
+    CREATE_LEADFORM_BUTTON = (By.XPATH, '//span[contains(text(), "Создать лид-форму")]')
 
     # ------------- 1 шаг -------------
     LEADFORM_NAME_INPUT = (By.XPATH, '//input[@placeholder="Название лид-формы"]')
@@ -69,17 +68,17 @@ class LeadFormsLocators(BaseLocators):
     DELETE_PHONE_CONTACT_OPTION = (By.XPATH, '//button[@data-id="phone"]')
     DELETE_NAME_CONTACT_OPTION = (By.XPATH, '//button[@data-id="first_name"]')
     CONTACT_OPTION_REQUIRED_LABEL = (By.XPATH, '//p[contains(text(), "Минимальное количество полей: 1")]')
-    ADD_CONTACT_OPTION_BUTTON = (By.XPATH, '//button/span/span[contains(text(), "Добавить контактные данные")]')
+    ADD_CONTACT_OPTION_BUTTON = (By.XPATH, '//span[contains(text(), "Добавить контактные данные")]')
     # Этому локатору соответствует несколько элементов, при обработке нужно учитывать порядковый номер поля
     CONTACT_OPTION = (By.XPATH, '//label[contains(@class, "vkuiCheckbox")]')
-    ADD_CONTACT_OPTIONS_AGREE_BUTTON = (By.XPATH, '//button/span/span[text()="Добавить"]')
+    ADD_CONTACT_OPTIONS_AGREE_BUTTON = (By.XPATH, '//span[text()="Добавить"]')
     PREVIEW_CONTACT_NAME = (By.XPATH, '//*[contains(@class, "vkuiFormField")]/input[@placeholder="Введите имя"]')
     PREVIEW_CONTACT_EMAIL = (By.XPATH, '//*[contains(@class, "vkuiFormField")]/input[@placeholder="Введите email"]')
     PREVIEW_CONTACT_PHONE = (By.XPATH, '//*[contains(@class, "vkuiFormField")]/input[@type="tel"]')
     PREVIEW_CONTACT_LINK = (By.XPATH, '//*[contains(@class, "vkuiFormField")]/input[@placeholder="Введите ссылку на соц. сеть"]')
     PREVIEW_CONTACT_BIRTH_DATE = (By.XPATH, '//*[contains(@class, "vkuiFormField")]/span[contains(@class, "vkuiDateInput")]')
     PREVIEW_CONTACT_CITY = (By.XPATH, '//*[contains(@class, "vkuiFormField")]/input[@placeholder="Введите город"]')
-    ADD_QUESTION_BUTTON = (By.XPATH, '//button/span/span[contains(text(), "Добавить вопрос")]')
+    ADD_QUESTION_BUTTON = (By.XPATH, '//span[contains(text(), "Добавить вопрос")]')
     DELETE_QUESTION_BUTTON = (By.XPATH, '//div[contains(@class, "Question")]/button[@aria-label="Remove"]')
     QUESTION_ELEMENT = (By.XPATH, '//div[contains(@class, "Question") and contains(text(), "Вопрос")]')
     QUESTION_ELEMENT_ERROR = (By.XPATH, '//div[contains(@class, "Question_error")]')
@@ -88,7 +87,7 @@ class LeadFormsLocators(BaseLocators):
     QUESTION_TYPE_ONE_ANSWER_OPTION = (By.XPATH, '//span[contains(text(), "Выбор одного ответа")]')
     QUESTION_TYPE_MANY_ANSWERS_OPTION = (By.XPATH, '//span[contains(text(), "Выбор нескольких ответов")]')
     QUESTION_TYPE_TEXT_ANSWER_OPTION = (By.XPATH, '//span[contains(text(), "Ответ в произвольной форме")]')
-    QUESTION_ADD_VARIANT_BUTTON = (By.XPATH, '//button/span/span[contains(text(), "Добавить ответ")]')
+    QUESTION_ADD_VARIANT_BUTTON = (By.XPATH, '//span[contains(text(), "Добавить ответ")]')
     QUESTION_VARIANT_INPUT = (By.XPATH, '//input[@placeholder="Введите ответ"]')
     QUESTION_DELETE_VARIANT_BUTTON = (By.XPATH, '//button[contains(@class, "Answer_removeBtn")]')
     PREVIEW_QUESTION_HEADER = lambda q: (By.XPATH, f'//div[contains(@class, "OnePageContentBlock")]/h3[contains(text(), "{q}")]')
@@ -111,7 +110,7 @@ class LeadFormsLocators(BaseLocators):
 
 
 class SurveyLocators(BaseLocators):
-    CREATE_SURVEY_BUTTON = (By.XPATH, '//button/span/span[contains(text(), "Создать опрос")]')
+    CREATE_SURVEY_BUTTON = (By.XPATH, '///span[contains(text(), "Создать опрос")]')
 
     # ------------- 1 шаг -------------
     SURVEY_NAME_INPUT = (By.XPATH, '//input[@placeholder="Введите название"]')
@@ -138,8 +137,8 @@ class SurveyLocators(BaseLocators):
 
     QUESTION_INPUT = (By.XPATH, '//textarea[@placeholder="Текст вопроса"]')
     QUESTION_ELEMENT_ERROR = (By.XPATH, '//div[contains(@class, "Question_error")]')
-    QUESTION_ADD_VARIANT_BUTTON = (By.XPATH, '//button/span/span[contains(text(), "Добавить вариант")]')
-    QUESTION_ADD_BUTTON = (By.XPATH, '//button/span/span[contains(text(), "Добавить вопрос")]')
+    QUESTION_ADD_VARIANT_BUTTON = (By.XPATH, '//span[contains(text(), "Добавить вариант")]')
+    QUESTION_ADD_BUTTON = (By.XPATH, '//span[contains(text(), "Добавить вопрос")]')
     QUESTION_VARIANT_INPUT = (By.XPATH, '//input[@placeholder="Введите ответ"]')
     QUESTION_DELETE_VARIANT_BUTTON = (By.XPATH, '//button[contains(@class, "Answer_removeBtn")]')
     # По мнению разработчиков Вк рекламы, у кнопки дублирование вопроса aria-label тоже "Remove" :P
@@ -147,7 +146,6 @@ class SurveyLocators(BaseLocators):
     QUESTION_ELEMENT = (By.XPATH, '//div[contains(@class, "Question_question__")]')
 
     # ------------- 3 шаг -------------
-    # Увы, но эти два элемента можно различать только по порядковому номеру
     RESULTS_HEADER_INPUT = (By.XPATH, '//input[@placeholder="Введите заголовок"]')
     RESULTS_DESCRIPTION_INPUT = (By.XPATH, '//input[@placeholder="Введите описание: например, поблагодарите за прохождение опроса"]')
     PREVIEW_RESULTS_HEADER = lambda h: (By.XPATH, f'//h2[contains(@class, "vkuiTitle") and contains(text(), "{h}")]')

@@ -15,6 +15,7 @@ class SurveysPage(BasePage):
             self.focus(SurveyLocators.ARCHIVE_ELEMENT_BUTTON)
             self.click(SurveyLocators.ARCHIVE_ELEMENT_BUTTON)
             self.click(SurveyLocators.ARCHIVE_ELEMENT_AGREE_BUTTON)
+            self.wait().until(EC.invisibility_of_element_located(SurveyLocators.ARCHIVE_ELEMENT_AGREE_BUTTON))
             self.open_and_wait()
 
     """
@@ -228,11 +229,12 @@ class SurveysPage(BasePage):
         self.focus(SurveyLocators.ARCHIVE_ELEMENT_BUTTON)
         self.click(SurveyLocators.ARCHIVE_ELEMENT_BUTTON)
         self.click(SurveyLocators.ARCHIVE_ELEMENT_AGREE_BUTTON)
+        self.wait().until(EC.invisibility_of_element_located(SurveyLocators.ARCHIVE_ELEMENT_AGREE_BUTTON))
         self.open_and_wait()
 
     def restore_survey(self, name: str):
-        self.focus(SurveyLocators.RESTORE_ELEMENT_BUTTON(name))
-        self.click(SurveyLocators.RESTORE_ELEMENT_BUTTON(name))
+        self.focus(SurveyLocators.RESTORE_ELEMENT_BUTTON)
+        self.click(SurveyLocators.RESTORE_ELEMENT_BUTTON)
         self.click(SurveyLocators.RESTORE_ELEMENT_AGREE_BUTTON)
         self.open_and_wait()
 

@@ -111,8 +111,8 @@ def driver(config):
     driver.set_network_conditions(
         offline=False,
         latency=5,
-        download_throughput=500 * 1024,
-        upload_throughput=500 * 1024,
+        download_throughput=1024 * 1024,
+        upload_throughput=1024 * 1024,
     )
     driver.maximize_window()
     yield driver

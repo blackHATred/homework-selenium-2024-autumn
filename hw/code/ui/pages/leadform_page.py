@@ -80,6 +80,7 @@ class LeadFormsPage(BasePage):
             self.focus(LeadFormsLocators.ARCHIVE_ELEMENT_BUTTON)
             self.click(LeadFormsLocators.ARCHIVE_ELEMENT_BUTTON)
             self.click(LeadFormsLocators.ARCHIVE_ELEMENT_AGREE_BUTTON)
+            self.wait().until(EC.invisibility_of_element_located(LeadFormsLocators.ARCHIVE_ELEMENT_AGREE_BUTTON))
             self.open_and_wait()
 
     """
@@ -357,12 +358,14 @@ class LeadFormsPage(BasePage):
         self.focus(LeadFormsLocators.ARCHIVE_ELEMENT_BUTTON)
         self.click(LeadFormsLocators.ARCHIVE_ELEMENT_BUTTON)
         self.click(LeadFormsLocators.ARCHIVE_ELEMENT_AGREE_BUTTON)
+        self.wait().until(EC.invisibility_of_element_located(LeadFormsLocators.ARCHIVE_ELEMENT_AGREE_BUTTON))
         self.open_and_wait()
 
     def restore_lead_form(self, name: str):
-        self.focus(LeadFormsLocators.RESTORE_ELEMENT_BUTTON(name))
-        self.click(LeadFormsLocators.RESTORE_ELEMENT_BUTTON(name))
+        self.focus(LeadFormsLocators.RESTORE_ELEMENT_BUTTON)
+        self.click(LeadFormsLocators.RESTORE_ELEMENT_BUTTON)
         self.click(LeadFormsLocators.RESTORE_ELEMENT_AGREE_BUTTON)
+        self.wait().until(EC.invisibility_of_element_located(LeadFormsLocators.RESTORE_ELEMENT_AGREE_BUTTON))
         self.open_and_wait()
 
     def search_lead_form(self, name: str):

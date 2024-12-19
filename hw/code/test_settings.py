@@ -193,7 +193,7 @@ class TestAccessListTab(BaseCase):
     def test_modal(self, access_settings_page):
         # Нажатие на кнопку "Добавить кабинет" открывает модальное окно
         access_settings_page.click_invite_button()
-        assert access_settings_page.is_close_hints_modal_opened
+        assert access_settings_page.is_modal_opened
         # Модальное окно содержит поле ввода ID пользователя, кнопки "Отправить" и "Отмена" появляются после ввода ID
         assert access_settings_page.is_user_id_input_visible
         assert access_settings_page.is_submit_button_visible
@@ -236,7 +236,7 @@ class TestAccessListTab(BaseCase):
         # При удалении приглашения пользователь исчезает (список станет пустым)
         # Открываем модальное окно с подтверждением удаления
         access_settings_page.click_delete_invite_button()
-        assert access_settings_page.is_close_hints_modal_opened
+        assert access_settings_page.is_modal_opened
         # Кнопка отмены отменяет действие и пользователь остаётся
         access_settings_page.click_cancel_delete_invite_button()
         assert access_settings_page.these_users_have_access_label
